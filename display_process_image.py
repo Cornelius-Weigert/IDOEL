@@ -2,7 +2,7 @@ import streamlit as st
 import eventlog_to_image 
 import pm4py
 
-log = pm4py.read_xes('Eventlogs/BPI_Challenge_2019.xes')
+log = pm4py.read_xes('Eventlogs/running-example.xes')
 
 st.title("Hello, Streamlit!")
 st.write("""*Hello World!*
