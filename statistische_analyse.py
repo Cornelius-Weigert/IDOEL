@@ -189,5 +189,5 @@ def full_log_analysis(path):
     return df, merged
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-df = full_log_analysis("event_log.xes")  # oder CSV
+df = full_log_analysis("event_log.xes") 
 
