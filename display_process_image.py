@@ -5,14 +5,11 @@ import re
 
 log = load_eventLog.eventLog_from_csv('Eventlogs/eventlog.csv')
 
-st.title("Hello, Streamlit!")
-st.write("""*Hello World!*
-         This is a simple Streamlit application.""")
+st.title("Filter the process variants in the event log")
 
-# display BPMN and DFG images
-st.title("BPMN Visualization from XES Log")
-st.image(eventlog_to_image.get_bpmn_image(log,percentage=0.95))
+percentage_slider = st.slider("What percentage of the variants do you want to keep?",0.0,1.0,step=0.01)
 
+# display DFG images
 
 st.title("Directly Follows Graph from XES Log")
-st.image(eventlog_to_image.get_dfg_image(log,percentage=0.15))
+st.image(eventlog_to_image.get_dfg_image(log,percentage=percentage_slider))

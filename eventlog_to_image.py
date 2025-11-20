@@ -33,5 +33,10 @@ def get_bpmn_image(log, percentage=1):
     os.remove(image_path)
     return svg_code
 
+def get_main_process_dfg_image(log):
+    return get_dfg_image(log,percentage=0.15)
+def get_main_process_bpmn_image(log):
+    return get_bpmn_image(log,percentage=0.95)
+
 if __name__ == "__main__":
     main()
