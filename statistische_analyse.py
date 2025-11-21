@@ -5,7 +5,7 @@ import os
 
 # ===========================
 # 1. Datei automatisch lesen
-# ===========================
+# ==========================
 def read_event_log(path):
     ext = os.path.splitext(path)[1].lower()
 
