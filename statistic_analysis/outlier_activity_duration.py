@@ -3,9 +3,9 @@ import pandas as pd
 # ---------------------------------------
 # 2. Activity Duration Outliers
 # ---------------------------------------
-def activity_duration_outliers(df, duration_col="Activity_Duration"):
+def activity_duration_outliers(log, duration_col="Activity_Duration"):
     """Detect outliers in activity durations."""
-    df2 = df.copy()
+    df2 = log.copy()
 
     # convert timedelta to seconds
     df2["sec"] = df2[duration_col].dt.total_seconds()

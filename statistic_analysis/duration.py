@@ -2,12 +2,12 @@
 #Benötige Zeit pro Aktivität
 #========================
 
-def duration_pro_activity(df, case_col="case:concept:name", event_col="concept:name", time_col="time:timestamp"):
-    if time_col not in df.columns:
+def duration_pro_activity(log, case_col="case:concept:name", event_col="concept:name", time_col="time:timestamp"):
+    if time_col not in log.columns:
         print("->>>Keine Timestamp - Aktivitätsdauer Analyse übersprungen.")
         return None
 
-    df_sorted = df.sort_values(by=[case_col, time_col]).copy()
+    df_sorted = log.sort_values(by=[case_col, time_col]).copy()
 
     #next timestamp
     df_sorted["next_time"] = df_sorted.groupby(case_col)[time_col].shift(-1)

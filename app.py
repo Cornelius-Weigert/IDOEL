@@ -3,13 +3,16 @@ import os
 import tempfile
 import load_eventLog
 import eventlog_to_image
+from display_analysis.main import show_all_analysis
+
 
 # Funktion zum Hochladen 
 def upload_eventlog():
     st.write("Bitte Eventlog hochladen (XES oder CSV):")
     
     uploaded_file = st.file_uploader("Datei auswählen", type=["xes", "csv"])
-    
+
+ 
     if uploaded_file is not None:
         # Temporäre Datei erstellen, um einen Dateipfad zu haben
         with tempfile.NamedTemporaryFile(delete=False, suffix=os.path.splitext(uploaded_file.name)[1]) as tmp_file:
@@ -45,9 +48,19 @@ darstell_button = st.button("Hauptprozess darstellen")
 
 # Darstellen des Hauptporzesses nachdem auf den Darstellbutton geklickt wurde
 if darstell_button:
+    #/////////////////
+    log=None
+    #///////////////////
     if file_type == "CSV":
         log = load_eventLog.eventLog_from_csv(file_path)
     elif file_type == "XES":
         log = load_eventLog.eventLog_from_xes(file_path)
     st.image(eventlog_to_image.get_dfg_image(log))
+
+    #////////////////////////////////
+    if log is not None:
+        show_all_analysis(log)
+    else:
+        st.error("Feler beim Laden der Dateo.")
     
+

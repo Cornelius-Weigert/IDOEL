@@ -2,8 +2,8 @@
 # ===================
 # 2. Basis-Analyse
 # ===================
-def basic_analysis(df):
-    print("->>>Verfügbare Spalten:", list(df.columns))
+def basic_analysis(log):
+    print("->>>Verfügbare Spalten:", list(log.columns))
     print("\n->>> Kopf der Daten:")
-    print(df.head())
+    print(log.head())
     print("\n------------------------")
