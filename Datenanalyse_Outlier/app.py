@@ -57,6 +57,8 @@ darstell_button = st.button("Hauptprozess darstellen")
 if darstell_button:
     if log is not None:
          st.image(eventlog_to_image.get_dfg_image(log))
+    else:
+        st.error("EventLog Datei benötigt!")
     
     
      
