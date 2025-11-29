@@ -1,12 +1,11 @@
 import pm4py
 import datetime
 import os
+import load_eventLog
 
 def main():
-    log = pm4py.read_xes('Eventlogs/eventlog.csv')   
-    directly_follows_graph, start_activities, end_activities = pm4py.discover_dfg(log)
-    
-    pm4py.save_vis_dfg(directly_follows_graph, start_activities, end_activities, 'temp_graphs/'+str(datetime.date.today())+'_dfg.png')
+    log = load_eventLog.eventLog_from_csv('Datenanalyse_Outlier/Eventlogs/eventlog.csv')
+    print(get_dfg_image(log,percentage=0.2))
 
 def get_dfg_image(log,percentage=0.2):
     """Given an event log in PM4Py format, this function generates and saves a Directly Follows Graph (DFG) image in the 'temp_graphs' directory.
