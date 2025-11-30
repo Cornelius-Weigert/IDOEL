@@ -6,6 +6,8 @@ import pandas as pd
 import pm4py
 import Datenanalyse_Outlier.eventlog_to_image as eventlog_to_image
 import Datenanalyse_Outlier.load_eventLog as load_eventLog
+from map_columns import map_column
+
 
 st.title("🧭 Process-Mining Preview")
 
@@ -20,6 +22,7 @@ file_type = st.session_state["file_type"]
 # --- EVENTLOG EINLESEN ---
 st.header("📄 Eventlog laden")
 
+'''
 def map_columns(df):
     # Kleinbuchstaben
     df.columns = [c.lower() for c in df.columns]
@@ -61,6 +64,8 @@ def map_columns(df):
         st.stop()
 
     return df
+'''
+map_column(df)
 
 try:
     if file_type == "CSV":
