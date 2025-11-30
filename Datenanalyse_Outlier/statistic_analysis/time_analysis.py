@@ -2,7 +2,7 @@
 # 6. Zeit-Analyse
 # =======================
 
-def time_analysis1(log, case_col="case:concept:name", time_col="time:timestamp"):
+def time_analysis1(log, case_col="case_id", time_col="timestamp"):
     if time_col not in log.columns:
         print("->>> Kein Timestamp gefunden - Zeit-Analyse übersprungen.")
         return

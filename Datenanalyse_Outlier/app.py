@@ -4,6 +4,8 @@ import tempfile
 import load_eventLog
 import eventlog_to_image
 from display_analysis.main import show_all_analysis
+from map_columns import map_column
+from eventlog_to_dataframe import eventlog_to_df
 
 # Funktion zum Hochladen 
 def upload_eventlog():
@@ -68,6 +70,11 @@ darstell_button2 = st.button("Datenanalyse anzeigen")
 
 if darstell_button2:
     if log is not None:
+        #log->dataframe
+        log=eventlog_to_df(log)
+        #Spalte-Name vereinheitlichen
+        log=map_column(log)
+
         show_all_analysis(log)
     else:
         st.error("Fehler beim Laden der Dateo ")

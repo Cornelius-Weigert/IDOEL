@@ -1,6 +1,6 @@
 
 import pandas as pd
-def compare_with_standardwert(log, standard, event_col="concept:name", value_col="Vslue"):
+def compare_with_standardwert(log, standard, event_col="activity", value_col="value"):
 
 
     if value_col not in log.columns:

@@ -1,7 +1,7 @@
 # ======================
 # 4. Numerische Analyse
 # =====================
-def numeric1(log, event_col="concept:name"):
+def numeric1(log, event_col="activity"):
     numeric_cols = log.select_dtypes(include="number").columns
 
     if len(numeric_cols) == 0:

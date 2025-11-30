@@ -2,7 +2,7 @@
 #Benötige Zeit pro Aktivität
 #========================
 
-def duration_pro_activity(log, case_col="case:concept:name", event_col="concept:name", time_col="time:timestamp"):
+def duration_pro_activity(log, case_col="case_id", event_col="activity", time_col="timestamp"):
     if time_col not in log.columns:
         print("->>>Keine Timestamp - Aktivitätsdauer Analyse übersprungen.")
         return None
