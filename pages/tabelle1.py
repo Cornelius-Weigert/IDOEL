@@ -6,7 +6,7 @@ import pandas as pd
 import pm4py
 import Datenanalyse_Outlier.eventlog_to_image as eventlog_to_image
 import Datenanalyse_Outlier.load_eventLog as load_eventLog
-from map_columns import map_column
+from pages.map_columns import map_column
 
 
 st.title("🧭 Process-Mining Preview")
