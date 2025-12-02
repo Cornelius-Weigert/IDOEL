@@ -2,17 +2,18 @@
 #diese main-Methode ist nicht benötigt
 ######################################
 
-from Datenanalyse_Outliers.statistic_analysis.reader import read_event_log
-from Datenanalyse_Outliers.statistic_analysis.basic import basic_analysis
-from Datenanalyse_Outliers.statistic_analysis.numeric import numeric
-from Datenanalyse_Outliers.statistic_analysis.resources import resources
-from Datenanalyse_Outliers.statistic_analysis.time_analysis import time_analysis
-from Datenanalyse_Outliers.statistic_analysis.duration import duration_pro_activity
-from Datenanalyse_Outliers.statistic_analysis.standard_compare import compare_with_standardwert
-from Datenanalyse_Outliers.statistic_analysis.outlier_activity_duration import activity_duration_outliers
-from Datenanalyse_Outliers.statistic_analysis.outlier_case_duration import case_duration_outliers
-from Datenanalyse_Outliers.statistic_analysis.outlier_numeric import numeric_outliers
-
+from reader import read_event_log
+from basic import basic_analysis
+import numeric
+import resources
+import time_analysis
+from duration import duration_pro_activity
+from standard_compare import compare_with_standardwert
+from outlier_activity_duration import activity_duration_outliers
+from outlier_case_duration import case_duration_outliers
+from outlier_numeric import numeric_outliers
+import pandas as pd
+from frequency import frequency1 as frequency
 
 
 def full_log_analysis(path):
@@ -78,4 +79,4 @@ def full_log_analysis(path):
 
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-df = full_log_analysis("event_log.xes")  # oder CSV
+df = full_log_analysis("Eventlogs/event_log.xes")  # oder CSV

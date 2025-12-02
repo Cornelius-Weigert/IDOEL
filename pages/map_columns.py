@@ -1,4 +1,5 @@
 import pandas as pd
+import streamlit as st
 
 def map_column(df):
     # Kleinbuchstaben
