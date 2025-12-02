@@ -6,11 +6,8 @@ import pandas as pd
 import pm4py
 import Datenanalyse_Outlier.eventlog_to_image as eventlog_to_image
 import Datenanalyse_Outlier.load_eventLog as load_eventLog
-from pages.map_columns import map_column
-<<<<<<< HEAD:pages/tabelle1.py
+#from pages.map_columns import map_column
 
-=======
->>>>>>> 79ceab19b4fa0a1abdbf11da755d0244c09e15f9:pages/2_tabelle1.py
 
 
 st.title("🧭 Process-Mining Preview")
@@ -67,16 +64,9 @@ st.header("📄 Eventlog laden")
 #         st.error("❌ Konnte keine gültigen Zeitstempel erkennen.")
 #         st.stop()
 
-<<<<<<< HEAD:pages/tabelle1.py
-    return df
-'''
 
-#df = map_column(df)
-=======
-#     return df
-# '''
 # df = map_column(df)
->>>>>>> 79ceab19b4fa0a1abdbf11da755d0244c09e15f9:pages/2_tabelle1.py
+
 
 try:
     if file_type == "CSV":
