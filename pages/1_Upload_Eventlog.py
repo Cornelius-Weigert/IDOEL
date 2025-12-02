@@ -39,6 +39,10 @@ st.write("Bitte Eventlog hochladen (XES oder CSV):")
 # Upload immer anzeigen (damit neue Datei geladen werden kann)
 upload_eventlog()
 
+if "file_path" not in st.session_state or st.session_state["file_path"] is None:
+    st.warning("⚠️ Bitte zuerst einen Eventlog auf der Button-Seite hochladen.")
+    st.stop()
+
 file_path = st.session_state["file_path"]
 file_type = st.session_state["file_type"]
 
