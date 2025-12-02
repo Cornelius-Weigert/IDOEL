@@ -8,7 +8,7 @@ def map_column(df):
     col_map = {}
 
     # case_id-Spalte
-    for name in ["case_id", "case", "Case_ID", "Case ID", "Case_id", "case id", "case:concept:name","id","ID"]:
+    for name in ["case_id", "case", "Case_ID", "Case ID", "Case_id", "case id", "case:concept:name","id","ID", "case ID"]:
         if name in df.columns:
             col_map[name] = "case_id"
             break

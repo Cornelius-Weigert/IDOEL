@@ -10,8 +10,8 @@ def activity_duration_outliers(log, duration_col="Activity_Duration"):
     # convert timedelta to seconds
     df2["sec"] = df2[duration_col].dt.total_seconds()
 
-    Q1 = df2["sec"].quantile(0.25)
-    Q3 = df2["sec"].quantile(0.75)
+    Q1 = df2["sec"].quantile(0.10)
+    Q3 = df2["sec"].quantile(0.90)
     IQR = Q3 - Q1
 
     lower = Q1 - 1.5 * IQR

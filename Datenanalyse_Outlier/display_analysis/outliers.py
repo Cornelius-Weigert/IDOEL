@@ -29,7 +29,7 @@ def show_outliers(log):
     else:
         st.info("Keine Aktivitätsdauer - Activity Outliers übersprungen.")
 
-    st.subheader("❗️Ausreißer - Numerische Werte")
+    st.subheader("❗️Außreier - Numerische Werte")
 
     numeric_cols = log.select_dtypes(include="number").columns
 
@@ -42,7 +42,19 @@ def show_outliers(log):
         "Numerische Spalte wählen:",
         numeric_cols
     )
+    st.write("###Quantile Einstellungen")
+    lowerq=st.slider(
+        "Unteres Quantil",
+        0.0,0.5,0.10,0.01
+    )
+    upperq=st.slider(
+        "Oberes Quantil ",
+        0.5,1.0,0.90,0.01
+    )
+    factor =st.slider("IOR-Faktor",
+    1.0,1.5,5.0,0.1
+    )
 
-    outliers_numeric, bounds_numeric = outlier_numeric.numeric_outliers(log, selected_numeric)
+    outliers_numeric, bounds_numeric = outlier_numeric.numeric_outliers(log, selected_numeric,lowerq=lowerq,upperq=upperq, factor=factor)
     st.write(f"Schwellenwerte: {bounds_numeric}")
     st.dataframe(outliers_numeric, use_container_width=True)
