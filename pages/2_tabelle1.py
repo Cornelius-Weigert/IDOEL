@@ -7,7 +7,10 @@ import pm4py
 import Datenanalyse_Outlier.eventlog_to_image as eventlog_to_image
 import Datenanalyse_Outlier.load_eventLog as load_eventLog
 from pages.map_columns import map_column
+<<<<<<< HEAD:pages/tabelle1.py
 
+=======
+>>>>>>> 79ceab19b4fa0a1abdbf11da755d0244c09e15f9:pages/2_tabelle1.py
 
 
 st.title("🧭 Process-Mining Preview")
@@ -23,51 +26,57 @@ file_type = st.session_state["file_type"]
 # --- EVENTLOG EINLESEN ---
 st.header("📄 Eventlog laden")
 
-'''
-def map_columns(df):
-    # Kleinbuchstaben
-    df.columns = [c.lower() for c in df.columns]
+# '''
+# def map_columns(df):
+#     # Kleinbuchstaben
+#     df.columns = [c.lower() for c in df.columns]
 
-    # Mapping für notwendige Spalten
-    col_map = {}
+#     # Mapping für notwendige Spalten
+#     col_map = {}
 
-    # case_id-Spalte
-    for name in ["case_id", "case", "Case_ID", "Case ID", "Case_id", "case id", "case:concept:name"]:
-        if name in df.columns:
-            col_map[name] = "case_id"
-            break
+#     # case_id-Spalte
+#     for name in ["case_id", "case", "Case_ID", "Case ID", "Case_id", "case id", "case:concept:name"]:
+#         if name in df.columns:
+#             col_map[name] = "case_id"
+#             break
 
-    # activity-Spalte
-    for name in ["activity", "Activity", "concept_name", "concept:name"]:
-        if name in df.columns:
-            col_map[name] = "activity"
-            break
+#     # activity-Spalte
+#     for name in ["activity", "Activity", "concept_name", "concept:name"]:
+#         if name in df.columns:
+#             col_map[name] = "activity"
+#             break
 
-    # timestamp-Spalte
-    for name in ["timestamp", "Complete Timestamp", "Complete timestamp", "complete timestamp", "Timestamp", "time", "time:timestamp"]:
-        if name in df.columns:
-            col_map[name] = "timestamp"
-            break
+#     # timestamp-Spalte
+#     for name in ["timestamp", "Complete Timestamp", "Complete timestamp", "complete timestamp", "Timestamp", "time", "time:timestamp"]:
+#         if name in df.columns:
+#             col_map[name] = "timestamp"
+#             break
 
-    df = df.rename(columns=col_map)
+#     df = df.rename(columns=col_map)
 
-    # Prüfen, ob alle Pflichtspalten jetzt existieren
-    must_have = {"case_id", "activity", "timestamp"}
-    if not must_have.issubset(df.columns):
-        missing = must_have - set(df.columns)
-        st.error(f"❌ CSV benötigt die Spalten: {', '.join(missing)}")
-        st.stop()
+#     # Prüfen, ob alle Pflichtspalten jetzt existieren
+#     must_have = {"case_id", "activity", "timestamp"}
+#     if not must_have.issubset(df.columns):
+#         missing = must_have - set(df.columns)
+#         st.error(f"❌ CSV benötigt die Spalten: {', '.join(missing)}")
+#         st.stop()
 
-    # Timestamp konvertieren
-    df["timestamp"] = pd.to_datetime(df["timestamp"], errors='coerce')
-    if df["timestamp"].isnull().all():
-        st.error("❌ Konnte keine gültigen Zeitstempel erkennen.")
-        st.stop()
+#     # Timestamp konvertieren
+#     df["timestamp"] = pd.to_datetime(df["timestamp"], errors='coerce')
+#     if df["timestamp"].isnull().all():
+#         st.error("❌ Konnte keine gültigen Zeitstempel erkennen.")
+#         st.stop()
 
+<<<<<<< HEAD:pages/tabelle1.py
     return df
 '''
 
 #df = map_column(df)
+=======
+#     return df
+# '''
+# df = map_column(df)
+>>>>>>> 79ceab19b4fa0a1abdbf11da755d0244c09e15f9:pages/2_tabelle1.py
 
 try:
     if file_type == "CSV":
