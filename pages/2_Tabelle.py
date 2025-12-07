@@ -8,8 +8,6 @@ import Datenanalyse_Outlier.eventlog_to_image as eventlog_to_image
 import Datenanalyse_Outlier.load_eventLog as load_eventLog
 #from pages.map_columns import map_column
 
-
-
 st.title("🧭 Process-Mining Preview")
 
 # Prüfen, ob Datei vom Button-Code existiert
@@ -56,23 +54,25 @@ def map_column(df):
             col_map[name] = "resource"
             break   
 
+
     
-    df = df.rename(columns=col_map)
-
+#
     # Prüfen, ob alle Pflichtspalten jetzt existieren
-    must_have = {"case_id", "activity", "timestamp"}
-    if not must_have.issubset(df.columns):
-        missing = must_have - set(df.columns)
-        st.error(f"❌ CSV benötigt die Spalten: {', '.join(missing)}")
-        st.stop()
+#    must_have = {"case_id", "activity", "timestamp"}
+#    if not must_have.issubset(df.columns):
+#        missing = must_have - set(df.columns)
+#        st.error(f"❌ CSV benötigt die Spalten: {', '.join(missing)}")
+#        st.stop()
 
-    # Timestamp konvertieren
-    df["timestamp"] = pd.to_datetime(df["timestamp"], errors='coerce')
-    if df["timestamp"].isnull().all():
-        st.error("❌ Konnte keine gültigen Zeitstempel erkennen.")
-        st.stop()
+#     # Timestamp konvertieren
+#     df["timestamp"] = pd.to_datetime(df["timestamp"], errors='coerce')
+#     if df["timestamp"].isnull().all():
+#         st.error("❌ Konnte keine gültigen Zeitstempel erkennen.")
+#         st.stop()
+#     return df
+# '''
+# df = map_column(df)
 
-    return df 
 
 
 try:
