@@ -9,11 +9,11 @@ st.session_state.setdefault("outlier_checked", 0)
 
 st.set_page_config(page_title="Dashboard", layout="wide")
 
-# --- Dashboard Header ---
+# --- Kopfzeile ---
 st.title("🏠 Dashboard")
-st.write("Willkommen zur Übersicht deiner Process-Mining-App!")
+st.write("Übersicht zur interaktiven Detektion von Ausreißern in Eventlogs")
 
-# --- METRICS ---
+# --- Spalten ---
 col1, col2, col3 = st.columns(3)
 
 with col1:

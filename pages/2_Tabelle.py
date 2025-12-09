@@ -6,9 +6,10 @@ import pandas as pd
 import pm4py
 import Datenanalyse_Outlier.eventlog_to_image as eventlog_to_image
 import Datenanalyse_Outlier.load_eventLog as load_eventLog
-#from pages.map_columns import map_column
+from streamlit_elements import elements, mui, nivo 
+# from pages.map_columns import map_column
 
-st.title("🧭 Process-Mining Preview")
+st.title("🧭 Tabelle - Ausreißeranalyse")
 
 # Prüfen, ob Datei vom Button-Code existiert
 if "file_path" not in st.session_state or st.session_state["file_path"] is None:
@@ -47,33 +48,31 @@ def map_column(df):
             col_map[name] = "timestamp"
             break
 
-
-     # Resource-Spalte
+    # Resource-Spalte
     for name in ["org:resource","resource"]:
         if name in df.columns:
             col_map[name] = "resource"
             break   
 
-
+    df = df.rename(columns=col_map)
     
-#
     # Prüfen, ob alle Pflichtspalten jetzt existieren
-#    must_have = {"case_id", "activity", "timestamp"}
-#    if not must_have.issubset(df.columns):
-#        missing = must_have - set(df.columns)
-#        st.error(f"❌ CSV benötigt die Spalten: {', '.join(missing)}")
-#        st.stop()
+    must_have = {"case_id", "activity", "timestamp"}
+    if not must_have.issubset(df.columns):
+        missing = must_have - set(df.columns)
+        st.error(f"❌ CSV benötigt die Spalten: {', '.join(missing)}")
+        st.stop()
 
-#     # Timestamp konvertieren
-#     df["timestamp"] = pd.to_datetime(df["timestamp"], errors='coerce')
-#     if df["timestamp"].isnull().all():
-#         st.error("❌ Konnte keine gültigen Zeitstempel erkennen.")
-#         st.stop()
-#     return df
+    # Timestamp konvertieren
+    df["timestamp"] = pd.to_datetime(df["timestamp"], errors='coerce')
+    if df["timestamp"].isnull().all():
+        st.error("❌ Konnte keine gültigen Zeitstempel erkennen.")
+        st.stop()
+              
+    return df
 # '''
+
 # df = map_column(df)
-
-
 
 try:
     if file_type == "CSV":
@@ -114,50 +113,61 @@ if "is_outlier" in df.columns:
 else:
     st.info("Keine Ausreißer-Spalte gefunden. Counter wird aktualisiert, sobald die Logik hinzugefügt wird.")
 
-# --- STATISTIKEN ---
-st.subheader("📊 Log-Statistiken")
+# --- Nivo-Chart ---
 
-num_cases = df["case_id"].nunique()
-num_events = len(df)
-num_activities = df["activity"].nunique()
-timespan = df["timestamp"].max() - df["timestamp"].min()
+st.subheader("📊 Chart: Anzahl Outlier pro Aktivität")
 
-col1, col2, col3, col4 = st.columns(4)
-col1.metric("Cases", num_cases)
-col2.metric("Events", num_events)
-col3.metric("Activities", num_activities)
-col4.metric("Period", str(timespan))
+# Aktivitätsspalte automatisch erkennen 
+activity_col = None
+possible_cols = ["activity", "Activity", "concept:name", "task", "event", "event_name"]
 
-st.markdown("---")
+for col in df.columns:
+    if col.lower() in possible_cols:
+        activity_col = col
+        break
 
-# --- HÄUFIGSTE AKTIVITÄTEN ---
-st.subheader("🔥 Häufigste Aktivitäten")
-st.bar_chart(df["activity"].value_counts())
+if activity_col is None:
+    st.warning(
+        "⚠️ Es wurde keine Aktivitätsspalte gefunden. "
+        "Erwartet wird z.B. 'Activity', 'activity', 'concept:name', ..."
+    )
+else:
+    # Anzahl Outlier pro Aktivität berechnen
+    if "is_outlier" in df.columns:
+        stats = (
+            df.groupby(activity_col)["is_outlier"]
+            .sum()
+            .reset_index()
+            .rename(columns={"is_outlier": "outliers"})
+        )
+    else:
+        stats = df.groupby(activity_col).size().reset_index(name="outliers")
 
-st.markdown("---")
+    # Daten für Nivo formatieren
+    nivo_data = [
+        {"activity": row[activity_col], "outliers": int(row["outliers"])}
+        for _, row in stats.iterrows()
+    ]
 
-# --- DIRECTLY-FOLLOWS GRAPH ---          muss mit Cornelius seinem Code vllt zusammengeführt werden ?
-st.subheader("🔁 Directly-Follows Graph (DFG)")
+    # Anzeige der vorhandenen Daten
+    st.write("📊 Daten für Nivo-Chart:")
+    st.write(nivo_data)
 
-percentage_slider = st.slider("Prozentsatz der häufigsten Pfade anzeigen (%)", min_value=5, max_value=100, value=20, step=5)/100
-st.image(eventlog_to_image.get_dfg_image(log,percentage=percentage_slider))
+    # Nivo Radar Chart anzeigen
+    with elements("nivo_outlier_chart"):
+        with mui.Box(sx={"height": 500}):
+            nivo.Radar(
+                data=nivo_data,
+                keys=["outliers"],
+                indexBy="activity",
+                margin={"top": 70, "right": 80, "bottom": 40, "left": 80},
+                dotSize=8,
+                motionConfig="gentle",
+            )
 
-df_sorted = df.sort_values(["case_id", "timestamp"])
-transitions = []
-
-for case in df_sorted["case_id"].unique():
-    events = df_sorted[df_sorted["case_id"] == case]["activity"].tolist()
-    transitions.extend(list(zip(events, events[1:])))
-
-dfg_df = pd.DataFrame(transitions, columns=["Von", "Nach"])
-st.dataframe(dfg_df, width='stretch')
-
-
-
-# komischer KeyError, muss noch behoben werden (wahrscheinlich wegen dem code in button.py)
 
 
 # --- SESSION STATE ---
 st.session_state.setdefault("df", None)
 st.session_state.setdefault("outlier_total", 0)
-st.session_state.setdefault("outlier_checked", 0)
+st.session_state.setdefault("outlier_checked", 0)  

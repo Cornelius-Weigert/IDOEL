@@ -127,3 +127,6 @@ st.markdown("---")
 # --- HÄUFIGSTE AKTIVITÄTEN ---
 st.subheader("🔥 Häufigste Aktivitäten")
 st.bar_chart(df["activity"].value_counts())
+
+
+
