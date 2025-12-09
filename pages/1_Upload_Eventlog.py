@@ -7,13 +7,27 @@ from pages.map_columns import map_column
 import pm4py
 import pandas as pd
 
+# --- SESSION STATE INITIALISIEREN ---
+if "uploaded_logs" not in st.session_state or st.session_state["uploaded_logs"] is None:
+    st.session_state["uploaded_logs"] = []
+
+if not isinstance(st.session_state["uploaded_logs"], list):
+    st.session_state["uploaded_logs"] = list(st.session_state["uploaded_logs"])
+
+st.session_state.setdefault("latest_upload", None)
+st.session_state.setdefault("file_path", None)
+st.session_state.setdefault("file_type", None)
+st.session_state.setdefault("file_name", None)
+
+
 # --- Upload Funktion ---
 def upload_eventlog():
     uploaded_file = st.file_uploader(
-        "Datei auswählen", 
-        type=["xes", "csv"], 
+        "Datei auswählen",
+        type=["xes", "csv"],
         key="eventlog_uploader"
     )
+
     if uploaded_file is not None:
 
         # Temporäre Datei sichern
@@ -29,27 +43,35 @@ def upload_eventlog():
         st.session_state["file_type"] = file_type
         st.session_state["file_name"] = uploaded_file.name
 
+        # Upload-Liste aktualisieren
+        st.session_state["uploaded_logs"].append(uploaded_file.name)
+        st.session_state["latest_upload"] = uploaded_file.name
+
         st.success(f"Datei erfolgreich hochgeladen: {uploaded_file.name} ({file_type})")
+
 
 # --- UI ---
 st.title("Eventlog hochladen")
-
 st.write("Bitte Eventlog hochladen (XES oder CSV):")
 
-# Upload immer anzeigen (damit neue Datei geladen werden kann)
+# Upload immer anzeigen
 upload_eventlog()
 
-if "file_path" not in st.session_state or st.session_state["file_path"] is None:
-    st.stop()
+# --- Wenn Datei existiert: anzeigen ---
+file_path = st.session_state.get("file_path")
+file_type = st.session_state.get("file_type")
+file_name = st.session_state.get("file_name")
 
-file_path = st.session_state["file_path"]
-file_type = st.session_state["file_type"]
 
+# --- Datei einlesen ---
 try:
     if file_type == "CSV":
         df = pd.read_csv(file_path)
         df = map_column(df)
         log = load_eventLog.eventLog_from_csv(file_path)
+
+        st.session_state["df"] = df
+        st.session_state["log"] = log
 
     elif file_type == "XES":
         log = pm4py.read_xes(file_path)
@@ -57,13 +79,22 @@ try:
         df = map_column(df)
         log = load_eventLog.eventLog_from_xes(file_path)
 
-    else:
-        st.error("❌ Unbekanntes Dateiformat.")
-        st.stop()
+        st.session_state["df"] = df
+        st.session_state["log"] = log
 
 except Exception as e:
     st.error(f"❌ Fehler beim Einlesen der Datei: {e}")
     st.stop()
+
+
+# --- Sicherstellen, dass df existiert ---
+if "df" not in st.session_state:
+    st.warning("⚠️ Kein Eventlog geladen.")
+    st.stop()
+
+df = st.session_state["df"]
+log = st.session_state["log"]
+
 
 
 # --- STATISTIKEN ---
@@ -85,10 +116,17 @@ st.markdown("---")
 # --- DIRECTLY-FOLLOWS GRAPH ---
 st.subheader("🔁 Directly-Follows Graph (DFG)")
 
-percentage_slider = st.slider("Prozentsatz der häufigsten Pfade anzeigen (%)", min_value=5, max_value=100, value=20)/100
-st.image(eventlog_to_image.get_dfg_image(log,percentage=percentage_slider))
+percentage_slider = st.slider(
+    "Prozentsatz der häufigsten Pfade anzeigen (%)",
+    min_value=5, max_value=100, value=20
+) / 100
+
+st.image(eventlog_to_image.get_dfg_image(log, percentage=percentage_slider))
 st.markdown("---")
 
 # --- HÄUFIGSTE AKTIVITÄTEN ---
 st.subheader("🔥 Häufigste Aktivitäten")
 st.bar_chart(df["activity"].value_counts())
+
+
+
