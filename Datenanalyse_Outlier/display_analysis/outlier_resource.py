@@ -1,6 +1,7 @@
 import streamlit as st
 from ..statistic_analysis.outlier_resource import outlier_resources
 
+
 def show_resource_outliers(log):
     """
     Zeigt Ausreißer in Ressourcen im Streamlit-Interface an.
@@ -10,7 +11,7 @@ def show_resource_outliers(log):
 
     st.subheader("❗️ Ausreißer - Ressourcen")
 
-    outliers = outlier_resources(log)
+    outliers, log_with_counts  = outlier_resources(log)
 
     for category, indices in outliers.items():
         st.write(f"### Kategorie: {category}")

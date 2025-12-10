@@ -1,6 +1,10 @@
 
 #kompatibel mit Upload_Eventlog.py: hochladen einer Datei in button.py lässt tabelle1 erst laden!
 
+import sys, os
+ROOT = os.path.dirname(os.path.abspath(__file__))  
+sys.path.append(os.path.join(ROOT, ".."))  
+
 import streamlit as st
 import pandas as pd
 import pm4py

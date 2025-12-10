@@ -12,6 +12,8 @@ from Datenanalyse_Outlier import eventlog_to_image as eventlog_to_image
 from Datenanalyse_Outlier import load_eventLog as load_eventLog
 # from pages.map_columns import map_column
 from streamlit_elements import elements, mui, nivo 
+from Datenanalyse_Outlier.display_analysis.main import show_all_analysis
+from Datenanalyse_Outlier.eventlog_to_dataframe import eventlog_to_df
 
 
 # --- SESSION STATE INITIALISIEREN ---
@@ -88,7 +90,6 @@ def map_column(df):
               
     return df
 # '''
-
 # df = map_column(df)
 
 try:
@@ -188,3 +189,23 @@ else:
 st.session_state.setdefault("df", None)
 st.session_state.setdefault("outlier_total", 0)
 st.session_state.setdefault("outlier_checked", 0)  
+
+# #############################################################
+#  --- STATISTISCHE ANALYSE & AUSREISSER ---
+st.subheader("📊 Statistische Analyse & Ausreißer")
+
+
+  # Eventlog->Dataframe
+if not isinstance(log, pd.DataFrame):
+    log_df = eventlog_to_df(log)
+else:
+    log_df = log.copy()
+
+st.write(log_df.columns)
+log_df = map_column(log_df)
+
+log_df["timestamp"] = pd.to_datetime(log_df["timestamp"], errors="coerce")
+
+log = log_df
+
+show_all_analysis(log)

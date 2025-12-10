@@ -30,10 +30,12 @@ def temporal_outliers(log, case_col="case_id", timestamp_col="timestamp"):
 
 
     #++++++++Wenn die Dauer zwischen Aktivitäten ungewöhnlich lang ist+++++++++++++
-    outliers = {}
+    #outliers = {}
+    #duration rechennen
     log = log.sort_values(by=[case_col, timestamp_col])
     log['prev_timestamp'] = log.groupby(case_col)[timestamp_col].shift(1)
     log['duration'] = (log[timestamp_col] - log['prev_timestamp']).dt.total_seconds() / 60.0  # Dauer in Minuten    
+    #lange Dauer
     duration_threshold = log['duration'].quantile(0.95)  # 95. Perzentil als Schwellenwert
     long_duration_rows = log[log['duration'] > duration_threshold]
     outliers['long-duration'] = long_duration_rows.index.tolist()
@@ -50,5 +52,5 @@ def temporal_outliers(log, case_col="case_id", timestamp_col="timestamp"):
 
 
 
-    return outliers
+    return outliers,log
 

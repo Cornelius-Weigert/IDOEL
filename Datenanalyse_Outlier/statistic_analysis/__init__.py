@@ -12,7 +12,7 @@ from .outlier_case_duration import case_duration_outliers
 from .outlier_datenattribute import data_attribute_outliers
 from .outlier_numeric import numeric_outliers
 from .outlier_resource import outlier_resources
-from .outlier_structur import structure_outliers
+from .outlier_structur import outlier_structure
 from .outlier_temporal import temporal_outliers
 from .outlier_trace import outlier_trace
 
