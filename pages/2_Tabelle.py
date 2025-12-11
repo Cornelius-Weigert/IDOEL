@@ -168,8 +168,8 @@ else:
     ]
 
     # Anzeige der vorhandenen Daten
-    st.write("📊 Daten für Nivo-Chart:")
-    st.write(nivo_data)
+    # st.write("📊 Daten für Nivo-Chart:")
+    # st.write(nivo_data)
 
     # Nivo Radar Chart anzeigen
     with elements("nivo_outlier_chart"):

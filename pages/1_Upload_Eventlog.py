@@ -137,29 +137,3 @@ st.markdown("---")
 # --- HÄUFIGSTE AKTIVITÄTEN ---
 st.subheader("🔥 Häufigste Aktivitäten")
 st.bar_chart(df["activity"].value_counts())
-
-
-
-# #############################################################
-# # --- STATISTISCHE ANALYSE & AUSREISSER ---
-# st.subheader("📊 Statistische Analyse & Ausreißer")
-
-
-#   # Eventlog->Dataframe
-# if not isinstance(log, pd.DataFrame):
-#         log_df = eventlog_to_df(log)
-# else:
-#         log_df = log.copy()
-
-# st.write(log_df.columns)
-# log_df = map_column(log_df)
-
-# log_df["timestamp"] = pd.to_datetime(log_df["timestamp"], errors="coerce")
-
-# log = log_df
-
-# show_all_analysis(log)
-
-
-
-
