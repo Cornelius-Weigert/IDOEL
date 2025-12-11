@@ -8,9 +8,9 @@ import os
 import tempfile
 import Datenanalyse_Outlier.load_eventLog as load_eventLog
 import Datenanalyse_Outlier.eventlog_to_image as eventlog_to_image
-from pages.map_columns import map_column
 import pm4py
 import pandas as pd
+from Datenanalyse_Outlier.map_columns import map_column
 
 
 # --- SESSION STATE INITIALISIEREN ---
