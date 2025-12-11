@@ -5,6 +5,7 @@ import pandas as pd
 st.session_state.setdefault("df", None)
 st.session_state.setdefault("outlier_total", 0)
 st.session_state.setdefault("outlier_checked", 0)
+st.session_state.setdefault("outliers_accepted", [])
 
 st.title("📑 Bericht - Ausreißeranalyse")
 
@@ -22,6 +23,7 @@ if "is_outlier" not in df.columns:
 total_events = len(df)
 total_outliers = st.session_state["outlier_total"]
 checked_outliers = st.session_state["outlier_checked"]
+outliers_accepted = st.session_state["outliers_accepted"]
 
 ratio = (total_outliers / total_events * 100) if total_events > 0 else 0
 

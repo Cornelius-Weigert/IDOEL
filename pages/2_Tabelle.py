@@ -189,6 +189,7 @@ else:
 st.session_state.setdefault("df", None)
 st.session_state.setdefault("outlier_total", 0)
 st.session_state.setdefault("outlier_checked", 0)  
+st.session_state.setdefault("outliers_accepted", [])
 
 # #############################################################
 #  --- STATISTISCHE ANALYSE & AUSREISSER ---
