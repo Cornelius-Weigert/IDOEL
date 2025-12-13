@@ -1,7 +1,7 @@
 import streamlit as st
 from ..statistic_analysis.standard_compare import compare_with_standardwert
-from ..statistic_analysis.time_analysis import time_analysis1
-from ..statistic_analysis.duration import duration_pro_activity
+from ..statistic_analysis.duration_process import duration_pro_case 
+from ..statistic_analysis.duration_activity import duration_pro_activity
 
 def show_standard_compare(log, standard_dict=None,source_col="value"):
     if log is None:
@@ -10,7 +10,7 @@ def show_standard_compare(log, standard_dict=None,source_col="value"):
     
 
     #Case Duration
-    durations=time_analysis1(log)
+    durations=duration_pro_case(log)
     if durations is not None:
         standard_duration=durations["Dauer"].mean()
         df_standard= compare_with_standardwert(durations, standard_duration, value_col="Dauer")

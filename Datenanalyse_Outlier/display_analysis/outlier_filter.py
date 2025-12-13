@@ -1,17 +1,17 @@
 import streamlit as st
 from ..statistic_analysis import (
+    duration_activity,
+    duration_process,
     outlier_case_duration,
     outlier_activity_duration,
-    outlier_numeric,
-    time_analysis,
-    duration
+    outlier_numeric
 )
 from ..statistic_analysis.outlier_numeric import numeric_outliers
 def show_outliers(log):
 
     st.subheader("❗️ Filter - Case Duration")
 #
-    durations = time_analysis.time_analysis1(log)
+    durations = duration_process.duration_pro_case(log)
     if durations is not None:
         st.write("### Quantile Einstellungen für Case Duration")
         lower_case = st.slider("Unteres Quantil (Case)", 0.0, 0.5, 0.10, 0.01)
@@ -28,7 +28,7 @@ def show_outliers(log):
 
     st.subheader("❗️ Filter - Activity Duration")
 
-    activity_df = duration.duration_pro_activity(log)
+    activity_df = duration_activity.duration_pro_activity(log)
     if activity_df is not None:
         st.write("### Quantile Einstellungen für Activity Duration")
         lower_act = st.slider("Unteres Quantil (Activity)", 0.0, 0.5, 0.10, 0.01)

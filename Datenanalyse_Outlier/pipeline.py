@@ -4,8 +4,7 @@ from .load_eventLog import eventLog_from_csv, eventLog_from_xes
 from .eventlog_to_image import get_dfg_image
 from Datenanalyse_Outlier.display_analysis.main import show_all_analysis
 from .statistic_analysis import (
-    reader, basic, numeric, resources, time_analysis,
-    duration, standard_compare,
+    duration_activity, duration_process, reader, basic, numeric, resources, standard_compare,
     outlier_activity_duration, outlier_case_duration, outlier_numeric, frequency
 )
 from .eventlog_to_dataframe import eventlog_to_df

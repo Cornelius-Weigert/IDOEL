@@ -6,8 +6,8 @@ from reader import read_event_log
 from basic import basic_analysis
 import numeric
 import resources
-import time_analysis
-from duration import duration_pro_activity
+import Datenanalyse_Outlier.statistic_analysis.duration_process as duration_process
+from Datenanalyse_Outlier.statistic_analysis.duration_activity import duration_pro_activity
 from standard_compare import compare_with_standardwert
 from outlier_activity_duration import activity_duration_outliers
 from outlier_case_duration import case_duration_outliers
@@ -48,7 +48,7 @@ def full_log_analysis(path):
         print("->>> Keine Ressourcenspalte (`org:resource`) gefunden.")
 
     # Zeit-Analyse
-    time_analysis(df)
+    duration_process(df)
 
     #Aktivitätdauer
     activity_durations = duration_pro_activity(df)
@@ -58,7 +58,7 @@ def full_log_analysis(path):
     print("\n==== OUTLIER ANALYSIS ====")
 
     # 1. Case Duration Outliers
-    case_outliers, case_bounds = case_duration_outliers(time_analysis(df))
+    case_outliers, case_bounds = case_duration_outliers(duration_process(df))
     print("\n->>> Case Duration Outliers:")
     print(case_outliers)
 

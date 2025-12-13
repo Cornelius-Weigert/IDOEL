@@ -26,8 +26,8 @@ def outlier_trace(log, case_col="case_id"):
 
    #------------------------------------------------------------
     # #+++++++Wenn der Trace selten vorkommt+++++++++++++
-    # trace_variants = log.groupby(case_col).apply(lambda x: tuple(x['activity'].tolist()))
-    # variant_counts = trace_variants.value_counts()
+    trace_variants = log.groupby(case_col).apply(lambda x: tuple(x['activity'].tolist()))
+    #variant_counts = trace_variants.value_counts()
     # rare_variants = variant_counts[variant_counts < variant_counts.quantile(0.05)].index
     # rare_trace_cases = trace_variants[trace_variants.isin(rare_variants)].index
     # rare_trace_rows = log[log[case_col].isin(rare_trace_cases)]
