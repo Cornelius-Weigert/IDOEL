@@ -10,7 +10,6 @@ import pm4py
 import pandas as pd
 from Datenanalyse_Outlier.map_columns import map_column
 
-
 # --- SESSION STATE INITIALISIEREN ---
 if "uploaded_logs" not in st.session_state or st.session_state["uploaded_logs"] is None:
     st.session_state["uploaded_logs"] = []
@@ -35,11 +34,11 @@ def upload_eventlog():
     )
 
     if uploaded_file is not None:
-
         # Temporäre Datei sichern
         with tempfile.NamedTemporaryFile(delete=False, suffix=os.path.splitext(uploaded_file.name)[1]) as tmp_file:
             tmp_file.write(uploaded_file.read())
             file_path = tmp_file.name
+        
 
         extension = os.path.splitext(uploaded_file.name)[1].lower()
         file_type = "XES" if extension == ".xes" else "CSV"
@@ -53,8 +52,11 @@ def upload_eventlog():
         st.session_state["uploaded_logs"].append(uploaded_file.name)
         st.session_state["latest_upload"] = uploaded_file.name
 
-        st.success(f"Datei erfolgreich hochgeladen: {uploaded_file.name} ({file_type})")
+        # log und df Session State zurücksetzen
+        st.session_state["df"] = None
+        st.session_state["log"] = None
 
+        st.success(f"Datei erfolgreich hochgeladen: {uploaded_file.name} ({file_type})")
 
 # --- UI ---
 st.title("Eventlog hochladen")
