@@ -12,9 +12,6 @@ def show_activity_duration(log):
     if act is not None:
         st.dataframe(act)
         
-
-
-
     st.write("->>>Durchschnittliche Aktivitätsdauer:",act["Activity_Duration"].mean())
     st.write("->>>Kürzeste Aktivitätsdauer:", act["Activity_Duration"].min())
     st.write("->>>Längste Aktivitätsdauer", act["Activity_Duration"].max())
