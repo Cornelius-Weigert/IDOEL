@@ -71,7 +71,7 @@ file_type = st.session_state.get("file_type")
 file_name = st.session_state.get("file_name")
 
 # --- Sicherstellen, dass df existiert ---
-if "df" not in st.session_state:
+if file_path is None or file_type is None:
     st.warning("⚠️ Kein Eventlog geladen.")
     st.stop()
 
