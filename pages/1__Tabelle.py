@@ -141,11 +141,12 @@ else:
 
 # --- Nivo-Chart ---
 
-st.subheader("📊 Chart: Anzahl Outlier pro Aktivität")
+st.subheader("📊 Prozentuale Gewichtung der Aktivität")
 
 # Aktivitätsspalte automatisch erkennen 
 activity_col = None
 possible_cols = ["activity", "Activity", "concept:name", "task", "event", "event_name"]
+total_events = len(df)
 
 for col in df.columns:
     if col.lower() in possible_cols:
@@ -171,7 +172,7 @@ else:
 
     # Daten für Nivo formatieren
     nivo_data = [
-        {"activity": row[activity_col], "outliers": int(row["outliers"])}
+        {"activity": row[activity_col], "outliers": round(int(row["outliers"])/total_events * 100,2)}
         for _, row in stats.iterrows()
     ]
 
@@ -190,7 +191,6 @@ else:
                 dotSize=8,
                 motionConfig="gentle",
             )
-
 
 
 # #############################################################
