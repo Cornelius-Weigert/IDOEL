@@ -4,7 +4,7 @@
 from .basic import basic_analysis
 from .duration_activity import duration_pro_activity
 from .frequency import frequency1
-from .numeric import numeric1
+# from .numeric import numeric1
 
 # Outlier detection
 from .outlier_activity_duration import activity_duration_outliers
