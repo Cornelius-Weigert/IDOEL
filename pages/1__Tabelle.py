@@ -12,7 +12,6 @@ from Datenanalyse_Outlier import eventlog_to_image as eventlog_to_image
 from Datenanalyse_Outlier import load_eventLog as load_eventLog
 from streamlit_elements import elements, mui, nivo 
 from Datenanalyse_Outlier.display_analysis.main import show_all_analysis
-from Datenanalyse_Outlier.eventlog_to_dataframe import eventlog_to_df
 from Datenanalyse_Outlier.map_columns import map_column
 
 # Sonstige Session States für Ausreißer
