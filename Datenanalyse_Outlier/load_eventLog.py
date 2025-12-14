@@ -15,15 +15,3 @@ def eventLog_from_xes(path):
     This function returns the event log in PM4Py format."""
     log = pm4py.read_xes(path)
     return log
-
-def main():
-    log = eventLog_from_csv('Eventlogs/finale_with_outliers.csv')
-    dfg,sa,ea = pm4py.discover_dfg(log)
-    dfg,sa,ea = pm4py.filtering.filter_dfg_paths_percentage(dfg,sa,ea,percentage=0.08)
-    pm4py.view_dfg(dfg,sa,ea,format='svg',graph_title="Directly Follows Graph from CSV Log")
-    log2 = eventLog_from_xes('Eventlogs/running-example.xes')
-    dfg2,sa2,ea2 = pm4py.discover_dfg(log2)
-    pm4py.view_dfg(dfg2,sa2,ea2,format='svg',graph_title="Directly Follows Graph from XES Log")
-
-if __name__ == "__main__":
-    main()
