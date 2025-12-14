@@ -1,5 +1,4 @@
 import streamlit as st
-import matplotlib.pyplot as plt
 
 def show_resources(log_df, resource_col="resource"):
     """
@@ -16,18 +15,15 @@ def show_resources(log_df, resource_col="resource"):
         st.info("Keine Ressourcenspalte gefunden.")
         return
     
-    activities = log_df["concept:name"].unique()
+    activities = log_df["activity"].unique()
     selected = st.selectbox("Aktivität wählen", activities)
 
-    sub = log_df[log_df["concept:name"] == selected]
+    sub = log_df[log_df["activity"] == selected]
     counts = sub["resource"].value_counts()
 
-    fig = plt.figure()
-    counts.plot(kind="bar")
-    plt.title(f"Ressourcen für {selected}")
-    st.pyplot(fig)
+    st.bar_chart(counts, sort=False) # sort=False to keep the original pre sorted order -> otherwise it sorts alphabetically
 
-    log_with_counts = log_df.groupby("resource").agg(activity_count=("concept:name", "count")).reset_index()
+    log_with_counts = log_df.groupby("resource").agg(activity_count=("activity", "count")).reset_index()
 
     st.subheader("📊 Ereignisse pro Ressource")
 
