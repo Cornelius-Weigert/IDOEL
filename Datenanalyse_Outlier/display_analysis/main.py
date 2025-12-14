@@ -7,10 +7,9 @@ from . outlier_trace import show_trace_outliers
 
  
 
-def show_all_analysis(log):
+def show_all_analysis(log_df):
     """
     show_all_analysis zeigt alls statistischen Analysen des Eventlogs in Streamlit an.
-
     
     :param log: das Eventlog als dataframe
 
@@ -25,8 +24,6 @@ def show_all_analysis(log):
         Prozessdauer,
         Zeit-Analyse,
         Ressourcen,
-       
-        
     """
   
     tab1, tab2, tab3, tab4 = st.tabs([
@@ -37,13 +34,13 @@ def show_all_analysis(log):
     ])
 
     with tab1:
-        show_temporal_outliers(log)
+        show_temporal_outliers(log_df)
     
     with tab2:
-        show_trace_outliers(log)
+        show_trace_outliers(log_df)
     
     with tab3:
-        show_resource_outliers(log)
+        show_resource_outliers(log_df)
     
     with tab4:
-        adapt_outlier_filter(log)
+        adapt_outlier_filter(log_df)
