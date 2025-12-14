@@ -1,24 +1,24 @@
 import pandas as pd
-# ==========================
-# 6. Zeit-Analyse
-# =======================
-
-def duration_pro_case(log, case_col="case_id", time_col="timestamp"):
+def duration_pro_case(log_df, case_col="case_id", time_col="timestamp"):
+    """
+    Calculate the duration of each case in the log.
+     Args:
+        log (pd.DataFrame): DataFrame containing the event log.
+        case_col (str): Column name for case IDs.
+        time_col (str): Column name for timestamps.
+    Returns:
+        pd.DataFrame: DataFrame with case durations.
+    """
 
     #Sortieren
-    df_sorted = log.sort_values(by=[case_col, time_col])
+    df_sorted = log_df.sort_values(by=[case_col, time_col])
 
     #Durchlaufzeit pro Case
     case_duration = df_sorted.groupby(case_col)[time_col].agg(["first", "last"])
-    #!!!
+    
     case_duration["case_duration"] = (case_duration["last"] - case_duration["first"]).dt.total_seconds() / 60.0  # (Dauer in Minuten)
 
     standard_case_duration = pd.DataFrame({case_col: case_duration["case_duration"].mean()}, index=[0])
     case_duration = case_duration.reset_index()
-
-
-
-    
-   
 
     return case_duration[[case_col, "case_duration"]]

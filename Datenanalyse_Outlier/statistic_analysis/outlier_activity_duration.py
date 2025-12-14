@@ -1,14 +1,18 @@
 import pandas as pd
+def activity_duration_outliers(log_df, duration_col="Activity_Duration", lower1=0.10, upper1=0.90, factor=1.5):
+    """Detect outliers in activity durations.
+    Args:
+        log (pd.DataFrame): DataFrame containing activity durations.
+        duration_col (str): Column name for activity durations.
+        lower1 (float): Lower quantile threshold.
+        upper1 (float): Upper quantile threshold.
+        factor (float): IQR multiplier to define outlier bounds.
 
-# ---------------------------------------
-# 2. Activity Duration Outliers
-# ---------------------------------------
-def activity_duration_outliers(log, duration_col="Activity_Duration", lower1=0.10, upper1=0.90, factor=1.5  ):
-    """Detect outliers in activity durations."""
-    df2 = log.copy()
-
-    # # convert timedelta to minutes
-    # df2["duration_col"] = df2[duration_col].dt.total_seconds() / 60.0
+    Returns:
+        pd.DataFrame: DataFrame containing outlier activities.
+        tuple: Lower and upper bounds for outlier detection.
+     """
+    df2 = log_df.copy()
 
     Q1 = df2[duration_col].quantile(lower1)
     Q3 = df2[duration_col].quantile(upper1)

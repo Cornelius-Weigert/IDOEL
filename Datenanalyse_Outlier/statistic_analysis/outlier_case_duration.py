@@ -1,12 +1,16 @@
-
-
 import pandas as pd
 
-# ---------------------------------------
-# 1. Case Duration Outliers
-# ---------------------------------------
 def case_duration_outliers(durations, lower1=0.10, upper1=0.90, factor=1.5):
-    """Detect outliers in total process duration per case."""
+    """Detect outliers in total process duration per case.
+    Args:
+        durations (pd.DataFrame): DataFrame containing case durations.
+        lower1 (float): Lower quantile threshold.
+        upper1 (float): Upper quantile threshold.
+        factor (float): IQR multiplier to define outlier bounds.
+     Returns:
+        pd.DataFrame: DataFrame containing outlier cases.
+        tuple: Lower and upper bounds for outlier detection.
+    """
     log = durations.copy()
 
     Q1 = log["case_duration"].quantile(lower1)

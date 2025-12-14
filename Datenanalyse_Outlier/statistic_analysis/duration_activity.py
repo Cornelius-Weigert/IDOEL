@@ -1,10 +1,16 @@
-#=======================
-#Benötige Zeit pro Aktivität
-#========================
+def duration_pro_activity(log_df, case_col="case_id", event_col="activity", time_col="timestamp"):
+    """
+    Calculate the duration of each activity in the log.
+     Args:
+        log (pd.DataFrame): DataFrame containing the event log.
+        case_col (str): Column name for case IDs.
+        event_col (str): Column name for activities.
+        time_col (str): Column name for timestamps.
+     Returns:
+        pd.DataFrame: DataFrame with activity durations and standard durations.
+    """
 
-def duration_pro_activity(log, case_col="case_id", event_col="activity", time_col="timestamp"):
-
-    activity_df = log.sort_values(by=[case_col, time_col]).copy()
+    activity_df = log_df.sort_values(by=[case_col, time_col]).copy()
 
     #next timestamp
     activity_df["next_time"] = activity_df.groupby(case_col)[time_col].shift(-1)

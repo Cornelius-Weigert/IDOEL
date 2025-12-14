@@ -22,7 +22,3 @@ def show_resource_outliers(log):
             st.dataframe(outlier_df, use_container_width=True)
         else:
             st.write("Keine Ausreißer in dieser Kategorie gefunden.")
-
-   
-
-
