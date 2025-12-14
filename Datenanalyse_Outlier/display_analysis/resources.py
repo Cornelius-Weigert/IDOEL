@@ -1,10 +1,10 @@
 import streamlit as st
 import matplotlib.pyplot as plt
 
-def show_resources(log):
+def show_resources(log, resource_col="resource"):
     st.subheader("👥 Ressourcen Analyse")
 
-    if "org:resource" not in log.columns:
+    if resource_col not in log.columns:
         st.info("Keine Ressourcenspalte gefunden.")
         return
     
@@ -12,14 +12,14 @@ def show_resources(log):
     selected = st.selectbox("Aktivität wählen", activities)
 
     sub = log[log["concept:name"] == selected]
-    counts = sub["org:resource"].value_counts()
+    counts = sub["resource"].value_counts()
 
     fig = plt.figure()
     counts.plot(kind="bar")
     plt.title(f"Ressourcen für {selected}")
     st.pyplot(fig)
 
-
+    log_with_counts = log.groupby("resource").agg(activity_count=("concept:name", "count")).reset_index()
 
     st.subheader("📊 Ereignisse pro Ressource")
 

@@ -17,17 +17,19 @@ def compare_with_standardwert(log, standard, event_col="activity", value_col="va
 
     log["Abweichung"] = log[value_col] - log["Standardwert"]
 
-    # Ergebnisse mit Vorzeichen formatiieren 
-    if pd.api.types.is_timedelta64_dtype(log["Abweichung"]):
-        def format_timedelta(td):
-            sign = "+" if td >= pd.Timedelta(0) else "-"
-            td_abs = abs(td)
-            return f"{sign}{td_abs}"
-        log["Abweichung_formatiert"] = log["Abweichung"].apply(format_timedelta)
-    else:
-        log["Abweichung_formatiert"] = log["Abweichung"].apply(lambda x: f"{x:+}")
+    # # Ergebnisse mit Vorzeichen formatiieren 
+    # if pd.api.types.is_timedelta64_dtype(log["Abweichung"]):
+    #     def format_timedelta(td):
+    #         sign = "+" if td >= pd.Timedelta(0) else "-"
+    #         td_abs = abs(td)
+    #         return f"{sign}{td_abs}"
+    #     log["Abweichung_formatiert"] = log["Abweichung"].apply(format_timedelta)
+    # else:
+    #     log["Abweichung_formatiert"] = log["Abweichung"].apply(lambda x: f"{x:+}")
 
-    return log[[value_col, "Standardwert", "Abweichung", "Abweichung_formatiert"]]
+    return log[[value_col, "Standardwert", "Abweichung", 
+                #"Abweichung_formatiert"
+                ]]
 
 
     

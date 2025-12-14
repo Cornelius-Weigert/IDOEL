@@ -12,8 +12,8 @@ def show_standard_compare(log, standard_dict=None,source_col="value"):
     #Case Duration
     durations=duration_pro_case(log)
     if durations is not None:
-        standard_duration=durations["Dauer"].mean()
-        df_standard= compare_with_standardwert(durations, standard_duration, value_col="Dauer")
+        standard_duration=durations["case_duration"].mean()
+        df_standard= compare_with_standardwert(durations, standard_duration, value_col="case_duration")
         st.subheader("📊Case Duration: Standardwerte & Abweichungen")
         st.dataframe(df_standard)
      #st.dataframe(durations)

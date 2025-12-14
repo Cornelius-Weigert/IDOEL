@@ -18,7 +18,7 @@ def deduplicate_columns(log):
 
    
 
-def show_temporal_outliers(log: pd.DataFrame, case_col="case_id", timestamp_col="timestamp"):
+def show_temporal_outliers(log: pd.DataFrame, case_col="case_id", timestamp_col="timestamp", activity_col="activity"):
     st.subheader("❗️ Ausreißer - Zeitlich")
 
   
@@ -32,7 +32,7 @@ def show_temporal_outliers(log: pd.DataFrame, case_col="case_id", timestamp_col=
         if indices:
             outlier_df = log_with_duration.loc[indices].copy()
 
-           
+            
             if "duration" not in outlier_df.columns:
                 outlier_df["duration"] = pd.NA
 
@@ -71,6 +71,11 @@ def show_temporal_outliers(log: pd.DataFrame, case_col="case_id", timestamp_col=
 
             # Runde die Dauer auf 2 Dezimalstellen
             #(in minuten!)
+
+            #ojektiv -> numeric
+            outlier_df["duration"] = pd.to_numeric(outlier_df["duration"], errors='coerce')
+            
+        
             if "duration" in outlier_df.columns:
                 outlier_df["duration"] = outlier_df["duration"].round(2)
 

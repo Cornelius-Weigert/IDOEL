@@ -3,21 +3,23 @@
 #========================
 
 def duration_pro_activity(log, case_col="case_id", event_col="activity", time_col="timestamp"):
-    if time_col not in log.columns:
-        print("->>>Keine Timestamp - Aktivitätsdauer Analyse übersprungen.")
-        return None
 
-    df_sorted = log.sort_values(by=[case_col, time_col]).copy()
+    activity_df = log.sort_values(by=[case_col, time_col]).copy()
 
     #next timestamp
-    df_sorted["next_time"] = df_sorted.groupby(case_col)[time_col].shift(-1)
-    #duration
-    df_sorted["Activity_Duration"] = df_sorted["next_time"] - df_sorted[time_col]
-    #durchschnitt
-    durations = df_sorted.groupby(event_col)["Activity_Duration"].mean().reset_index()
-    print("\n->>> Durchschnittliche Dauer pro Aktivität:")
-    print(durations)
+    activity_df["next_time"] = activity_df.groupby(case_col)[time_col].shift(-1)
+    #duration 
+    activity_df["Activity_Duration"] = activity_df["next_time"] - activity_df[time_col]
+    #->in Minuten
+    activity_df["Activity_Duration"] = activity_df["Activity_Duration"].dt.total_seconds() / 60.0
 
-    result = df_sorted[[case_col,event_col, "Activity_Duration"]].dropna()
+    #standard duration pro Aktivität(durchschnitt)
+    standard_activity_duration = activity_df.groupby(event_col)["Activity_Duration"].mean().reset_index()
+    standard_activity_duration.columns = [event_col, "standard_activity_duration"]
+    activity_df = activity_df.merge(
+        standard_activity_duration,
+        on=event_col,
+        how="left"
+    )
 
-    return result
+    return activity_df[[case_col, event_col, "Activity_Duration", "standard_activity_duration"]]
