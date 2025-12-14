@@ -26,6 +26,7 @@ st.session_state.setdefault("log", None)
 st.session_state.setdefault("outlier_total", 0)
 st.session_state.setdefault("outlier_checked", 0)
 st.session_state.setdefault("outliers_accepted", pd.DataFrame())
+st.session_state.setdefault("outliers", None)
 
 
 
@@ -109,6 +110,11 @@ if st.session_state.get("df") is None:
 else:
     df = st.session_state["df"]
     log = st.session_state["log"]
+
+# Analysen durchführen und in Session state speichern 
+#from Datenanalyse_Outlier.show_analysis import show_all_analysis
+#st.session_state["outliers"] = show_all_analysis(log)
+
 
 
 # --- STATISTIKEN ---

@@ -15,7 +15,7 @@ from Datenanalyse_Outlier.display_analysis.main import show_all_analysis
 from Datenanalyse_Outlier.eventlog_to_dataframe import eventlog_to_df
 from Datenanalyse_Outlier.map_columns import map_column
 
-# Sonstige Session States für Ausreißer
+#Session States für Ausreißer
 st.session_state.setdefault("outlier_total", 0)
 st.session_state.setdefault("outlier_checked", 0)  
 st.session_state.setdefault("outliers_accepted", [])
@@ -200,3 +200,7 @@ log_df["timestamp"] = pd.to_datetime(log_df["timestamp"], errors="coerce")
 log = log_df
 
 show_all_analysis(log)
+
+# Analysen durchführen und in Session state speichern 
+from Datenanalyse_Outlier.show_analysis import show_all_analysis
+st.session_state["outliers"] = show_all_analysis(log)
