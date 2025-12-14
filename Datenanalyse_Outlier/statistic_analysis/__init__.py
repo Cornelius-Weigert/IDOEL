@@ -11,8 +11,7 @@ from .outlier_resource import outlier_resources
 from .outlier_temporal import temporal_outliers
 from .outlier_trace import outlier_trace
 
-# Resource and time
-from .resources import resources1
+# time
 from .duration_process import duration_pro_case
 
 # Standard compare
