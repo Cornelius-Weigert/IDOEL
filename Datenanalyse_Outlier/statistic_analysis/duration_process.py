@@ -2,7 +2,7 @@
 # 6. Zeit-Analyse
 # =======================
 
-def time_analysis1(log, case_col="case_id", time_col="timestamp"):
+def duration_pro_case(log, case_col="case_id", time_col="timestamp"):
     if time_col not in log.columns:
         print("->>> Kein Timestamp gefunden - Zeit-Analyse übersprungen.")
         return
@@ -15,9 +15,9 @@ def time_analysis1(log, case_col="case_id", time_col="timestamp"):
     #!!!
     durations["Dauer"] = durations["last"] - durations["first"]
 
-    print("\n->>> Durchschnittliche Prozessdauer:", durations["Dauer"].mean())
-    print("->>> Kürzeste Prozessdauer:", durations["Dauer"].min())
-    print("->>> Längste Prozessdauer:", durations["Dauer"].max())
+    print("\nDurchschnittliche Prozessdauer:", durations["Dauer"].mean())
+    print("Kürzeste Prozessdauer:", durations["Dauer"].min())
+    print("Längste Prozessdauer:", durations["Dauer"].max())
 
    
 

@@ -18,6 +18,6 @@ def duration_pro_activity(log, case_col="case_id", event_col="activity", time_co
     print("\n->>> Durchschnittliche Dauer pro Aktivität:")
     print(durations)
 
-    result = df_sorted[[event_col, "Activity_Duration"]].dropna()
+    result = df_sorted[[case_col,event_col, "Activity_Duration"]].dropna()
 
     return result

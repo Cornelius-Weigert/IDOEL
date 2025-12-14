@@ -10,10 +10,10 @@ import pandas as pd
 import pm4py
 from Datenanalyse_Outlier import eventlog_to_image as eventlog_to_image
 from Datenanalyse_Outlier import load_eventLog as load_eventLog
-# from pages.map_columns import map_column
 from streamlit_elements import elements, mui, nivo 
 from Datenanalyse_Outlier.display_analysis.main import show_all_analysis
 from Datenanalyse_Outlier.eventlog_to_dataframe import eventlog_to_df
+from Datenanalyse_Outlier.map_columns import map_column
 
 
 # --- SESSION STATE INITIALISIEREN ---
@@ -27,6 +27,12 @@ st.session_state.setdefault("latest_upload", None)
 st.session_state.setdefault("file_path", None)
 st.session_state.setdefault("file_type", None)
 st.session_state.setdefault("file_name", None)
+st.session_state.setdefault("df", None)
+st.session_state.setdefault("log", None)
+# Sonstige Session States für Ausreißer
+st.session_state.setdefault("outlier_total", 0)
+st.session_state.setdefault("outlier_checked", 0)  
+st.session_state.setdefault("outliers_accepted", [])
 
 st.title("🧭 Tabelle - Ausreißeranalyse")
 
@@ -35,82 +41,84 @@ if "file_path" not in st.session_state or st.session_state["file_path"] is None:
     st.warning("⚠️ Bitte zuerst einen Eventlog auf der Button-Seite hochladen.")
     st.stop()
 
-file_path = st.session_state["file_path"]
-file_type = st.session_state["file_type"]
+# file_path = st.session_state["file_path"]
+# file_type = st.session_state["file_type"]
 
 # --- EVENTLOG EINLESEN ---
 st.header("📄 Eventlog laden")
+df = st.session_state["df"]
+log = st.session_state["log"]
 
 # '''
-def map_column(df):
-    # Kleinbuchstaben
-    df.columns = [c.lower() for c in df.columns]
+# def map_column(df):
+#     # Kleinbuchstaben
+#     df.columns = [c.lower() for c in df.columns]
 
-    # Mapping für notwendige Spalten
-    col_map = {}
+#     # Mapping für notwendige Spalten
+#     col_map = {}
 
-    # case_id-Spalte
-    for name in ["case_id", "case", "Case_ID", "Case ID", "Case_id", "case id", "case:concept:name","id","ID", "case ID"]:
-        if name in df.columns:
-            col_map[name] = "case_id"
-            break
+#     # case_id-Spalte
+#     for name in ["case_id", "case", "Case_ID", "Case ID", "Case_id", "case id", "case:concept:name","id","ID", "case ID"]:
+#         if name in df.columns:
+#             col_map[name] = "case_id"
+#             break
 
-    # activity-Spalte
-    for name in ["activity", "Activity", "concept_name", "concept:name"]:
-        if name in df.columns:
-            col_map[name] = "activity"
-            break
+#     # activity-Spalte
+#     for name in ["activity", "Activity", "concept_name", "concept:name"]:
+#         if name in df.columns:
+#             col_map[name] = "activity"
+#             break
 
-    # timestamp-Spalte
-    for name in ["timestamp", "Complete Timestamp", "Complete timestamp", "complete timestamp", "Timestamp", "time", "time:timestamp"]:
-        if name in df.columns:
-            col_map[name] = "timestamp"
-            break
+#     # timestamp-Spalte
+#     for name in ["timestamp", "Complete Timestamp", "Complete timestamp", "complete timestamp", "Timestamp", "time", "time:timestamp"]:
+#         if name in df.columns:
+#             col_map[name] = "timestamp"
+#             break
 
-    # Resource-Spalte
-    for name in ["org:resource","resource"]:
-        if name in df.columns:
-            col_map[name] = "resource"
-            break   
+#     # Resource-Spalte
+#     for name in ["org:resource","resource"]:
+#         if name in df.columns:
+#             col_map[name] = "resource"
+#             break   
 
-    df = df.rename(columns=col_map)
+#     df = df.rename(columns=col_map)
     
-    # Prüfen, ob alle Pflichtspalten jetzt existieren
-    must_have = {"case_id", "activity", "timestamp"}
-    if not must_have.issubset(df.columns):
-        missing = must_have - set(df.columns)
-        st.error(f"❌ CSV benötigt die Spalten: {', '.join(missing)}")
-        st.stop()
+#     # Prüfen, ob alle Pflichtspalten jetzt existieren
+#     must_have = {"case_id", "activity", "timestamp"}
+#     if not must_have.issubset(df.columns):
+#         missing = must_have - set(df.columns)
+#         st.error(f"❌ CSV benötigt die Spalten: {', '.join(missing)}")
+#         st.stop()
 
-    # Timestamp konvertieren
-    df["timestamp"] = pd.to_datetime(df["timestamp"], errors='coerce')
-    if df["timestamp"].isnull().all():
-        st.error("❌ Konnte keine gültigen Zeitstempel erkennen.")
-        st.stop()
+#     # Timestamp konvertieren
+#     df["timestamp"] = pd.to_datetime(df["timestamp"], errors='coerce')
+#     if df["timestamp"].isnull().all():
+#         st.error("❌ Konnte keine gültigen Zeitstempel erkennen.")
+#         st.stop()
               
-    return df
+#     return df
 # '''
 # df = map_column(df)
 
-try:
-    if file_type == "CSV":
-        df = pd.read_csv(file_path)
-        df = map_column(df)
-        log = load_eventLog.eventLog_from_csv(file_path)
+# try:
+#     if file_type == "CSV":
+#         df = pd.read_csv(file_path)
+#         df = map_column(df)
+#         log = load_eventLog.eventLog_from_csv(file_path)
 
-    elif file_type == "XES":
-        log = pm4py.read_xes(file_path)
-        df = pm4py.convert_to_dataframe(log)
-        df = map_column(df)
-        log = load_eventLog.eventLog_from_xes(file_path)
+#     elif file_type == "XES":
+#         log = pm4py.read_xes(file_path)
+#         df = pm4py.convert_to_dataframe(log)
+#         df = map_column(df)
+#         log = load_eventLog.eventLog_from_xes(file_path)
 
-    else:
-        st.error("❌ Unbekanntes Dateiformat.")
-        st.stop()
+#     else:
+#         st.error("❌ Unbekanntes Dateiformat.")
+#         st.stop()
 
-except Exception as e:
-    st.error(f"❌ Fehler beim Einlesen der Datei: {e}")
-    st.stop()
+# except Exception as e:
+#     st.error(f"❌ Fehler beim Einlesen der Datei: {e}")
+#     st.stop()
 
 st.success("Eventlog erfolgreich geladen!")
 
@@ -133,11 +141,12 @@ else:
 
 # --- Nivo-Chart ---
 
-st.subheader("📊 Chart: Anzahl Outlier pro Aktivität")
+st.subheader("📊 Prozentuale Gewichtung der Aktivität")
 
 # Aktivitätsspalte automatisch erkennen 
 activity_col = None
 possible_cols = ["activity", "Activity", "concept:name", "task", "event", "event_name"]
+total_events = len(df)
 
 for col in df.columns:
     if col.lower() in possible_cols:
@@ -163,7 +172,7 @@ else:
 
     # Daten für Nivo formatieren
     nivo_data = [
-        {"activity": row[activity_col], "outliers": int(row["outliers"])}
+        {"activity": row[activity_col], "outliers": round(int(row["outliers"])/total_events * 100,2)}
         for _, row in stats.iterrows()
     ]
 
@@ -184,16 +193,10 @@ else:
             )
 
 
-
-# --- SESSION STATE ---
-st.session_state.setdefault("df", None)
-st.session_state.setdefault("outlier_total", 0)
-st.session_state.setdefault("outlier_checked", 0)  
-st.session_state.setdefault("outliers_accepted", [])
-
 # #############################################################
 #  --- STATISTISCHE ANALYSE & AUSREISSER ---
 st.subheader("📊 Statistische Analyse & Ausreißer")
+
 
 
   # Eventlog->Dataframe
@@ -202,7 +205,7 @@ if not isinstance(log, pd.DataFrame):
 else:
     log_df = log.copy()
 
-st.write(log_df.columns)
+# st.write(log_df.columns)
 log_df = map_column(log_df)
 
 log_df["timestamp"] = pd.to_datetime(log_df["timestamp"], errors="coerce")

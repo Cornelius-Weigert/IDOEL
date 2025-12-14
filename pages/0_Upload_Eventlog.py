@@ -2,16 +2,13 @@ import sys, os
 ROOT = os.path.dirname(os.path.abspath(__file__))  
 sys.path.append(os.path.join(ROOT, ".."))  
 
-
 import streamlit as st
-import os
 import tempfile
 import Datenanalyse_Outlier.load_eventLog as load_eventLog
 import Datenanalyse_Outlier.eventlog_to_image as eventlog_to_image
 import pm4py
 import pandas as pd
 from Datenanalyse_Outlier.map_columns import map_column
-
 
 # --- SESSION STATE INITIALISIEREN ---
 if "uploaded_logs" not in st.session_state or st.session_state["uploaded_logs"] is None:
@@ -24,6 +21,8 @@ st.session_state.setdefault("latest_upload", None)
 st.session_state.setdefault("file_path", None)
 st.session_state.setdefault("file_type", None)
 st.session_state.setdefault("file_name", None)
+st.session_state.setdefault("df", None)
+st.session_state.setdefault("log", None)
 
 
 # --- Upload Funktion ---
@@ -35,11 +34,11 @@ def upload_eventlog():
     )
 
     if uploaded_file is not None:
-
         # Temporäre Datei sichern
         with tempfile.NamedTemporaryFile(delete=False, suffix=os.path.splitext(uploaded_file.name)[1]) as tmp_file:
             tmp_file.write(uploaded_file.read())
             file_path = tmp_file.name
+        
 
         extension = os.path.splitext(uploaded_file.name)[1].lower()
         file_type = "XES" if extension == ".xes" else "CSV"
@@ -53,8 +52,11 @@ def upload_eventlog():
         st.session_state["uploaded_logs"].append(uploaded_file.name)
         st.session_state["latest_upload"] = uploaded_file.name
 
-        st.success(f"Datei erfolgreich hochgeladen: {uploaded_file.name} ({file_type})")
+        # log und df Session State zurücksetzen
+        st.session_state["df"] = None
+        st.session_state["log"] = None
 
+        st.success(f"Datei erfolgreich hochgeladen: {uploaded_file.name} ({file_type})")
 
 # --- UI ---
 st.title("Eventlog hochladen")
@@ -68,42 +70,41 @@ file_path = st.session_state.get("file_path")
 file_type = st.session_state.get("file_type")
 file_name = st.session_state.get("file_name")
 
-
-# --- Datei einlesen ---
-try:
-    if file_type == "CSV":
-        df = pd.read_csv(file_path)
-        df = map_column(df)
-        log = load_eventLog.eventLog_from_csv(file_path)
-
-        st.session_state["df"] = df
-        st.session_state["log"] = log
-       
-
-
-    elif file_type == "XES":
-        log = pm4py.read_xes(file_path)
-        df = pm4py.convert_to_dataframe(log)
-        df = map_column(df)
-        log = load_eventLog.eventLog_from_xes(file_path)
-
-        st.session_state["df"] = df
-        st.session_state["log"] = log
-        
-
-except Exception as e:
-    st.error(f"❌ Fehler beim Einlesen der Datei: {e}")
-    st.stop()
-
-
 # --- Sicherstellen, dass df existiert ---
-if "df" not in st.session_state:
+if file_path is None or file_type is None:
     st.warning("⚠️ Kein Eventlog geladen.")
     st.stop()
 
-df = st.session_state["df"]
-log = st.session_state["log"]
+if st.session_state.get("df") is None:
+    # --- Datei einlesen ---
+    try:
+        if file_type == "CSV":
+            df = pd.read_csv(file_path)
+            df = map_column(df)
+            log = load_eventLog.eventLog_from_csv(file_path)
 
+            st.session_state["df"] = df
+            st.session_state["log"] = log
+        
+
+
+        elif file_type == "XES":
+            log = pm4py.read_xes(file_path)
+            df = pm4py.convert_to_dataframe(log)
+            df = map_column(df)
+            log = load_eventLog.eventLog_from_xes(file_path)
+
+            st.session_state["df"] = df
+            st.session_state["log"] = log
+            
+
+    except Exception as e:
+        st.error(f"❌ Fehler beim Einlesen der Datei: {e}")
+        st.stop()
+
+else:
+    df = st.session_state["df"]
+    log = st.session_state["log"]
 
 
 # --- STATISTIKEN ---
