@@ -1,7 +1,6 @@
 # __init__.py for statistic_analysis
 
 # Basic analyses
-from .basic import basic_analysis
 from .duration_activity import duration_pro_activity
 from .frequency import frequency1
 
@@ -20,7 +19,7 @@ from .duration_process import duration_pro_case
 from .standard_compare import compare_with_standardwert
 
 # Reader
-from .reader import read_event_log
+# from .reader import read_event_log
 
 __all__ = [
     "basic_statistics",
