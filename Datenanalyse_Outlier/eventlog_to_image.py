@@ -3,11 +3,6 @@ import datetime
 import os
 #import load_eventLog
 
-def main():
-    # log = load_eventLog.eventLog_from_csv('Datenanalyse_Outlier/Eventlogs/eventlog.csv')
-    # print(get_dfg_image(log,percentage=0.2))
-    print("currently not available")
-
 def get_dfg_image(log,percentage=0.2):
     """Given an event log in PM4Py format, this function generates and saves a Directly Follows Graph (DFG) image in the 'temp_graphs' directory.
     Percentage parameter can be used to filter the DFG paths.
@@ -32,6 +27,3 @@ def get_bpmn_image(log, percentage=1):
     svg_code = svg_code[svg_code.find("<svg"):]
     os.remove(image_path)
     return svg_code
-
-if __name__ == "__main__":
-    main()

@@ -201,7 +201,8 @@ st.subheader("📊 Statistische Analyse & Ausreißer")
 
   # Eventlog->Dataframe
 if not isinstance(log, pd.DataFrame):
-    log_df = eventlog_to_df(log)
+    # log_df = eventlog_to_df(log)
+    log_df = pm4py.convert_to_dataframe(log)
 else:
     log_df = log.copy()
 

@@ -1,24 +1,23 @@
-# ==========================
-# 6. Zeit-Analyse
-# =======================
+import pandas as pd
+def duration_pro_case(log_df, case_col="case_id", time_col="timestamp"):
+    """
+    Calculate the duration of each case in the log.
+     Args:
+        log (pd.DataFrame): DataFrame containing the event log.
+        case_col (str): Column name for case IDs.
+        time_col (str): Column name for timestamps.
+    Returns:
+        pd.DataFrame: DataFrame with case durations.
+    """
 
-def duration_pro_case(log, case_col="case_id", time_col="timestamp"):
-    if time_col not in log.columns:
-        print("->>> Kein Timestamp gefunden - Zeit-Analyse übersprungen.")
-        return
-    
     #Sortieren
-    df_sorted = log.sort_values(by=[case_col, time_col])
+    df_sorted = log_df.sort_values(by=[case_col, time_col])
 
     #Durchlaufzeit pro Case
-    durations = df_sorted.groupby(case_col)[time_col].agg(["first", "last"])
-    #!!!
-    durations["Dauer"] = durations["last"] - durations["first"]
+    case_duration = df_sorted.groupby(case_col)[time_col].agg(["first", "last"])
+    
+    case_duration["case_duration"] = (case_duration["last"] - case_duration["first"]).dt.total_seconds() / 60.0  # (Dauer in Minuten)
 
-    print("\nDurchschnittliche Prozessdauer:", durations["Dauer"].mean())
-    print("Kürzeste Prozessdauer:", durations["Dauer"].min())
-    print("Längste Prozessdauer:", durations["Dauer"].max())
+    case_duration = case_duration.reset_index()
 
-   
-
-    return durations
+    return case_duration[[case_col, "case_duration"]]

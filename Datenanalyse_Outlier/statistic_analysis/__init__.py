@@ -11,31 +11,28 @@ from .outlier_resource import outlier_resources
 from .outlier_temporal import temporal_outliers
 from .outlier_trace import outlier_trace
 
-# Resource and time
-from .resources import resources1
+# time
 from .duration_process import duration_pro_case
 
 # Standard compare
 from .standard_compare import compare_with_standardwert
 
-# Reader
-# from .reader import read_event_log
-
 __all__ = [
-    "basic_statistics",
     "calculate_durations",
     "summarize_durations",
     "frequency_analysis",
-
     "activity_duration_outliers",
     "case_duration_outliers",
     "resource_outliers",
     "temporal_outliers",
     "trace_outliers",
-
+    "duration_pro_activity",
+    "frequency1",
+    "outlier_resources",
+    "outlier_trace",
+    "resources1",
+    "duration_pro_case",
     "resource_statistics",
     "time_statistics",
-    "compare_with_standard",
-
-    "read_eventlog",
+    "compare_with_standardwert",
 ]
