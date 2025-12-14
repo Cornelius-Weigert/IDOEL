@@ -22,8 +22,8 @@ def show_resources(log_df, resource_col="resource"):
     sub = log_df[log_df["activity"] == selected]
     counts = sub["resource"].value_counts()
 
-    st.bar_chart(counts, sort=False)
- 
+    st.bar_chart(counts, sort=False) # sort=False to keep the original pre sorted order -> otherwise it sorts alphabetically
+
     log_with_counts = log_df.groupby("resource").agg(activity_count=("activity", "count")).reset_index()
 
     st.subheader("📊 Ereignisse pro Ressource")
