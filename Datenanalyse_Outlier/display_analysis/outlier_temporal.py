@@ -32,7 +32,7 @@ def show_temporal_outliers(log_df: pd.DataFrame, case_col="case_id", timestamp_c
 
     log_df = deduplicate_columns(log_df)
 
-    outliers, log_with_duration = temporal_outliers(log_df, case_col=case_col, timestamp_col=timestamp_col)
+    outliers, log_with_duration = temporal_outliers(log_df, case_col=case_col)
 
     # duration auch anzeigen
     for category, indices in outliers.items():

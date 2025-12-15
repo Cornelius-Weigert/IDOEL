@@ -1,6 +1,6 @@
 import pandas as pd
 
-def case_duration_outliers(durations, lower1=0.10, upper1=0.90, factor=1.5):
+def case_duration_outliers(durations, lower1=0.05, upper1=0.95, factor=1.5):
     """Detect outliers in total process duration per case.
     Args:
         durations (pd.DataFrame): DataFrame containing case durations.
@@ -15,6 +15,7 @@ def case_duration_outliers(durations, lower1=0.10, upper1=0.90, factor=1.5):
 
     Q1 = log["case_duration"].quantile(lower1)
     Q3 = log["case_duration"].quantile(upper1)
+
     IQR = Q3 - Q1
 
     lower = Q1 - factor * IQR

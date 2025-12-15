@@ -1,4 +1,6 @@
 import pandas as pd
+from . import duration_activity
+import streamlit as st
 
 def temporal_outliers(log_df, case_col="case_id", activity_col="activity", timestamp_col="timestamp"):
     """
@@ -42,13 +44,29 @@ def temporal_outliers(log_df, case_col="case_id", activity_col="activity", times
     outliers['missing-timestamp'] = missing_timestamp_rows.index.tolist()  
 
     #++++++++Wenn die Dauer zwischen Aktivitäten ungewöhnlich lang ist+++++++++++++
+    st.subheader("❗️ Filter - Activity Duration")
 
-    long_duration_threshold = log_df['duration'].quantile(0.95)  # 95. Perzentil als Schwellenwert
+    activity_df = duration_activity.duration_pro_activity(log_df)
+    #if activity_df is not None:
+    show_act_slider = st.checkbox("Quantile Einstellungen an zeigen ", value = False,key="activity_slider")
+    if show_act_slider:   
+        st.write("### Quantile Einstellungen für Activity Duration")
+        lower_act = st.slider("Unteres Quantil (Activity)", 0.0, 0.5, 0.10, 0.01)
+        upper_act = st.slider("Oberes Quantil (Activity)", 0.5, 1.0, 0.90, 0.01)
+        factor_act = st.slider("IQR-Faktor (Activity)", 1.0, 5.0, 1.5, 0.1)
+        st.session_state.setdefault('lower_act', 0.05)
+        st.session_state.setdefault('upper_act', 0.95)
+        st.session_state.setdefault('factor_act', factor_act)
+        st.session_state['lower_act'] = lower_act
+        st.session_state['upper_act'] = upper_act
+        st.session_state['factor_act'] = factor_act
+
+    long_duration_threshold = log_df['duration'].quantile(st.session_state['upper_act'])
     long_duration_rows = log_df[log_df['duration'] > long_duration_threshold]
     outliers['long-activity-duration'] = long_duration_rows.index.tolist()
 
     #++++++++Wenn die Dauer zwischen Aktivitäten ungewöhnlich kurz ist+++++++++++++
-    short_duration_threshold = log_df['duration'].quantile(0.05)  #
+    short_duration_threshold = log_df['duration'].quantile(st.session_state['lower_act'])  
     short_duration_rows = log_df[log_df['duration'] < short_duration_threshold]
     outliers['short-activity-duration'] = short_duration_rows.index.tolist() 
 

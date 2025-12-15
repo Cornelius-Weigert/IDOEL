@@ -1,4 +1,6 @@
 import pandas as pd
+import streamlit as st
+from . import duration_process
 def outlier_trace(log_df, case_col="case_id"):
     """
     Detect outliers in traces based on various criteria.
@@ -10,14 +12,31 @@ def outlier_trace(log_df, case_col="case_id"):
     """
     #+++++++Wenn der Trace ungewöhnlich lang ist+++++++++++++
     outliers = {}
+    st.subheader("❗️ Filter - Case Duration")
+
+    case_duration = duration_process.duration_pro_case(log_df)
+    #if case_duration is not None and not case_duration.empty:
+    show_case_slider = st.checkbox("Quantile Einstellungen an zeigen ", value = False,key="case_slider")
+    if show_case_slider:
+        st.write("### Quantile Einstellungen für Case Duration")
+        lower_case = st.slider("Unteres Quantil (Case)", 0.0, 0.5, 0.10, 0.01)
+        upper_case = st.slider("Oberes Quantil (Case)", 0.5, 1.0, 0.90, 0.01)
+        factor_case = st.slider("IQR-Faktor (Case)", 1.0, 5.0, 1.5, 0.1)
+        st.session_state.setdefault('lower_case', 0.05)
+        st.session_state.setdefault('upper_case', 0.95)
+        st.session_state.setdefault('factor_case', factor_case)
+        st.session_state['lower_case'] = lower_case
+        st.session_state['upper_case'] = upper_case
+        st.session_state['factor_case'] = factor_case
+     
     trace_lengths = log_df.groupby(case_col).size()
-    length_threshold = trace_lengths.quantile(0.95)  # 95. Perzentil als Schwellenwert
+    length_threshold = trace_lengths.quantile(st.session_state['upper_case']) 
     long_trace_cases = trace_lengths[trace_lengths > length_threshold].index
     long_trace_rows = log_df[log_df[case_col].isin(long_trace_cases)]
     outliers['long-traces'] = long_trace_rows.index.tolist()
 
     #+++++++Wenn der Trace ungewöhnlich kurz ist+++++++++++++
-    short_trace_cases = trace_lengths[trace_lengths < trace_lengths.quantile(0.05)].index
+    short_trace_cases = trace_lengths[trace_lengths < trace_lengths.quantile(st.session_state['lower_case'])].index
     short_trace_rows = log_df[log_df[case_col].isin(short_trace_cases)]
     outliers['short-traces'] = short_trace_rows.index.tolist()      
 
@@ -29,6 +48,7 @@ def outlier_trace(log_df, case_col="case_id"):
     diverse_activity_cases = trace_activity_counts[trace_activity_counts > trace_activity_counts.quantile(0.95)].index
     diverse_activity_rows = log_df[log_df[case_col].isin(diverse_activity_cases)]
     outliers['many-activity-traces'] = diverse_activity_rows.index.tolist()  
+   
 
     #+++++++Wenn der Trace zu wenige verschiedene Aktivitäten hat+++++++++++++
     uniform_activity_cases = trace_activity_counts[trace_activity_counts < trace_activity_counts.quantile(0.05)].index

@@ -28,4 +28,5 @@ def duration_pro_activity(log_df, case_col="case_id", event_col="activity", time
         how="left"
     )
 
-    return activity_df[[case_col, event_col, "Activity_Duration", "standard_activity_duration"]]
+    #return activity_df[[case_col, event_col, "Activity_Duration", "standard_activity_duration"]]
+    return activity_df
