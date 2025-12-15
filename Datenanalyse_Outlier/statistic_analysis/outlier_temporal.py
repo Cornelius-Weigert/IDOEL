@@ -27,6 +27,7 @@ def temporal_outliers(log_df, case_col="case_id", activity_col="activity", times
     outliers = {}
     
     #+++++Wenn die timestamp in Zukunft liegt++++++++++++++
+    log_df[timestamp_col] = pd.to_datetime(log_df[timestamp_col]).dt.tz_localize("Europe/Berlin")      
     now = pd.Timestamp.now(tz="Europe/Berlin")
     future_rows = log_df[log_df[timestamp_col] > now]
     outliers['future-timestamp'] = future_rows.index.tolist()
