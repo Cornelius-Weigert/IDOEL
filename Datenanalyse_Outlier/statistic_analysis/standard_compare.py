@@ -1,6 +1,6 @@
 
 import pandas as pd
-def compare_with_standardwert(log_df, standard, event_col="activity", value_col="value"):
+def compare_with_standardwert(log_df, standard=None, event_col="activity", value_col="value"):
     """
     Compare values in the log with standard values.
     Args:
@@ -14,6 +14,9 @@ def compare_with_standardwert(log_df, standard, event_col="activity", value_col=
 
     if value_col not in log_df.columns:
         return pd.DataFrame()
+    
+    if standard is None:
+        standard = log_df[value_col].median()
 
     if isinstance(standard,(int, float, pd.Timedelta)):
         log_df["Standardwert"]=standard 
