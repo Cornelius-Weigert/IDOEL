@@ -2,6 +2,16 @@ import pandas as pd
 from . import duration_activity
 import streamlit as st
 
+if 'lower_act' not in st.session_state:
+    st.session_state['lower_act'] = 0.05
+
+if 'upper_act' not in st.session_state:
+    st.session_state['upper_act'] = 0.95
+
+if 'factor_act' not in st.session_state:
+    st.session_state['factor_act'] = 1.5
+
+
 def temporal_outliers(log_df, case_col="case_id", activity_col="activity", timestamp_col="timestamp"):
     """
     Detect temporal outliers in the event log.
@@ -54,9 +64,9 @@ def temporal_outliers(log_df, case_col="case_id", activity_col="activity", times
         lower_act = st.slider("Unteres Quantil (Activity)", 0.0, 0.5, 0.10, 0.01)
         upper_act = st.slider("Oberes Quantil (Activity)", 0.5, 1.0, 0.90, 0.01)
         factor_act = st.slider("IQR-Faktor (Activity)", 1.0, 5.0, 1.5, 0.1)
-        st.session_state.setdefault('lower_act', 0.05)
-        st.session_state.setdefault('upper_act', 0.95)
-        st.session_state.setdefault('factor_act', factor_act)
+        # st.session_state.setdefault('lower_act', 0.05)
+        # st.session_state.setdefault('upper_act', 0.95)
+        # st.session_state.setdefault('factor_act', factor_act)
         st.session_state['lower_act'] = lower_act
         st.session_state['upper_act'] = upper_act
         st.session_state['factor_act'] = factor_act

@@ -1,6 +1,16 @@
 import pandas as pd
 import streamlit as st
 from . import duration_process
+
+if 'lower_case' not in st.session_state:
+    st.session_state['lower_case'] = 0.05
+
+if 'upper_case' not in st.session_state:
+    st.session_state['upper_case'] = 0.95
+
+if 'factor_case' not in st.session_state:
+    st.session_state['factor_case'] = 1.5
+
 def outlier_trace(log_df, case_col="case_id"):
     """
     Detect outliers in traces based on various criteria.
@@ -22,9 +32,9 @@ def outlier_trace(log_df, case_col="case_id"):
         lower_case = st.slider("Unteres Quantil (Case)", 0.0, 0.5, 0.10, 0.01)
         upper_case = st.slider("Oberes Quantil (Case)", 0.5, 1.0, 0.90, 0.01)
         factor_case = st.slider("IQR-Faktor (Case)", 1.0, 5.0, 1.5, 0.1)
-        st.session_state.setdefault('lower_case', 0.05)
-        st.session_state.setdefault('upper_case', 0.95)
-        st.session_state.setdefault('factor_case', factor_case)
+        # st.session_state.setdefault('lower_case', 0.05)
+        # st.session_state.setdefault('upper_case', 0.95)
+        # st.session_state.setdefault('factor_case', factor_case)
         st.session_state['lower_case'] = lower_case
         st.session_state['upper_case'] = upper_case
         st.session_state['factor_case'] = factor_case
