@@ -11,7 +11,7 @@ import pm4py
 from Datenanalyse_Outlier import eventlog_to_image as eventlog_to_image
 from Datenanalyse_Outlier import load_eventLog as load_eventLog
 from streamlit_elements import elements, mui, nivo 
-from Datenanalyse_Outlier.display_analysis.main import show_all_analysis
+# from Datenanalyse_Outlier.display_analysis.main import show_all_analysis as main_show_all_analysis
 from Datenanalyse_Outlier.map_columns import map_column
 
 #Session States für Ausreißer
@@ -120,10 +120,10 @@ log_df = map_column(log_df)
 
 log_df["timestamp"] = pd.to_datetime(log_df["timestamp"], errors="coerce")
 
-log = log_df
 
-show_all_analysis(log)
+# main_show_all_analysis(log_df)
 
 # Analysen durchführen und in Session state speichern 
-from Datenanalyse_Outlier.show_analysis import show_all_analysis
-st.session_state["outliers"] = show_all_analysis(log)
+from Datenanalyse_Outlier.show_analysis import show_all_analysis as D_O_show_all_analysis
+st.session_state["outliers"] = D_O_show_all_analysis(log_df)
+st.write(st.session_state.get("outliers"))
