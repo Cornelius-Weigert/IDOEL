@@ -1,5 +1,6 @@
 import streamlit as st
 from ..statistic_analysis.outlier_resource import outlier_resources
+from .outlier_acception import accept_outliers
 
 def show_resource_outliers(log_df):
     """
@@ -12,7 +13,7 @@ def show_resource_outliers(log_df):
 
     st.subheader("❗️ Ausreißer - Ressourcen")
 
-    display_cols=["case_id","activity","resource","timestamp","resource_activity_count"]
+    display_cols=["case_id","activity","resource","timestamp"]
 
     outliers,log_with_counts = outlier_resources(log_df)
 
@@ -22,12 +23,20 @@ def show_resource_outliers(log_df):
     for category, indices in outliers.items():
         st.write(f"### Kategorie: {category}")
         if indices:
-            outlier_df = log_df.loc[indices]
+            outlier_df = log_df.loc[indices, display_cols]
             outlier_df = outlier_df.merge(
             resource_activity_count,
             on="resource",
             how="left"
-            )
-            st.dataframe(outlier_df[display_cols], width="stretch",hide_index=True)
+           )
+            selectable_outliers = st.dataframe(
+                outlier_df, 
+                width="stretch",
+                on_select="rerun",
+                selection_mode="multi-row",
+                hide_index=True)
+            ausreißer_akzeptiert_button = st.button("Ausgewählte Ausreißer akzeptieren", key=f"accept_temporal_{category}")
+            if ausreißer_akzeptiert_button:
+                accept_outliers(selectable_outliers.selection.rows, category,outlier_df)
         else:
             st.write("Keine Ausreißer in dieser Kategorie gefunden.")

@@ -2,6 +2,8 @@ import streamlit as st
 from ..statistic_analysis.outlier_temporal import temporal_outliers
 import pandas as pd
 from ..statistic_analysis.second_to_time import second_to_time
+from .outlier_acception import accept_outliers
+
 
 def deduplicate_columns(log_df):
     new_cols = []
@@ -30,7 +32,7 @@ def show_temporal_outliers(log_df: pd.DataFrame, case_col="case_id", timestamp_c
         None
     """
     st.subheader("❗️ Ausreißer - Zeitlich")
-
+    st.session_state["outliers_temporal"] = []
     log_df = deduplicate_columns(log_df)
 
     outliers, log_with_duration = temporal_outliers(log_df, case_col=case_col)
@@ -88,11 +90,15 @@ def show_temporal_outliers(log_df: pd.DataFrame, case_col="case_id", timestamp_c
             
 
             # display in dataframe with selectable rows
-            st.dataframe(
+            outliers = st.dataframe(
                 outlier_df, 
                 width="stretch",
                 on_select="rerun",
                 selection_mode="multi-row",
                 hide_index=True,)
+            
+            ausreißer_akzeptiert_button = st.button("Ausgewählte Ausreißer akzeptieren", key=f"accept_temporal_{category}")
+            if ausreißer_akzeptiert_button:
+                accept_outliers(outliers.selection.rows, category,outlier_df)
         else:
             st.write("Keine Ausreißer in dieser Kategorie gefunden.")
