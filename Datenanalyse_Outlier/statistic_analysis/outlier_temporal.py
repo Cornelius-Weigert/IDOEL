@@ -2,16 +2,7 @@ import pandas as pd
 from . import duration_activity
 import streamlit as st
 from .second_to_time import second_to_time
-if 'lower_act' not in st.session_state:
-    st.session_state['lower_act'] = 0.05
-
-if 'upper_act' not in st.session_state:
-    st.session_state['upper_act'] = 0.95
-
-if 'factor_act' not in st.session_state:
-    st.session_state['factor_act'] = 1.5
-
-
+ 
 def temporal_outliers(log_df, case_col="case_id", activity_col="activity", timestamp_col="timestamp"):
     """
     Detect temporal outliers in the event log.
@@ -64,6 +55,9 @@ def temporal_outliers(log_df, case_col="case_id", activity_col="activity", times
     activity_df = duration_activity.duration_pro_activity(log_df)
     #if activity_df is not None:
     show_act_slider = st.checkbox("Perzentilebasierte Grenzwerte anzeigen ", value = False,key="activity_slider")
+    lower_act=st.session_state['lower_act'] = 0.05
+    upper_act=st.session_state['upper_act'] = 0.95
+    factor_act=st.session_state['factor_act'] = 1.5
     if show_act_slider:   
         st.write("Perzentilbasierte Grenzwerte (Activity Duration)")
         lower_act = st.slider("Untere Grenze(Activity)", 0.0, 0.5, 0.10, 0.01,help="Der Anzahl von Aktivität-Dauer, der die Dauern so teilt, dass x% der Dauern kürzer oder gleich diesem Wert treiben(und y% länger)")
