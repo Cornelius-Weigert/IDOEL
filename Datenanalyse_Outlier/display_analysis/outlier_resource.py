@@ -21,7 +21,7 @@ def show_resource_outliers(log_df):
         st.write(f"### Kategorie: {category}")
         if indices:
             outlier_df = log_df.loc[indices, display_cols]
-            st.dataframe(
+            selectable_outliers = st.dataframe(
                 outlier_df, 
                 width="stretch",
                 on_select="rerun",
@@ -29,6 +29,6 @@ def show_resource_outliers(log_df):
                 hide_index=True)
             ausreißer_akzeptiert_button = st.button("Ausgewählte Ausreißer akzeptieren", key=f"accept_temporal_{category}")
             if ausreißer_akzeptiert_button:
-                accept_outliers(outliers.selection.rows, category,outlier_df)
+                accept_outliers(selectable_outliers.selection.rows, category,outlier_df)
         else:
             st.write("Keine Ausreißer in dieser Kategorie gefunden.")
