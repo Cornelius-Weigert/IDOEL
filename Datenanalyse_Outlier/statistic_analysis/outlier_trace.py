@@ -2,15 +2,6 @@ import pandas as pd
 import streamlit as st
 from . import duration_process
 
-if 'lower_case' not in st.session_state:
-    st.session_state['lower_case'] = 0.05
-
-if 'upper_case' not in st.session_state:
-    st.session_state['upper_case'] = 0.95
-
-if 'factor_case' not in st.session_state:
-    st.session_state['factor_case'] = 1.5
-
 def outlier_trace(log_df, case_col="case_id"):
     """
     Detect outliers in traces based on various criteria.
@@ -27,6 +18,9 @@ def outlier_trace(log_df, case_col="case_id"):
     case_duration = duration_process.duration_pro_case(log_df)
     #if case_duration is not None and not case_duration.empty:
     show_case_slider = st.checkbox("Perzentilebasierte Grenzwerte anzeigen ", value = False,key="case_slider")
+    lower_case=st.session_state['lower_case'] = 0.05
+    upper_case=st.session_state['upper_case'] = 0.95
+    factor_case=st.session_state['factor_case'] = 1.5
     if show_case_slider:
         st.write("Perzentilebasierte Grenzenwerte(Case Duration)")
         lower_case = st.slider("Untere Grenze (Case)", 0.0, 0.5, 0.10, 0.01,help="Der Anzahl von Case-Dauer, der die Dauern so teilt, dass x% der Dauern kürzer oder gleich diesem Wert treiben(und y% länger)")
