@@ -15,12 +15,12 @@ def second_to_time(seconds: float) -> str:
         minutes, seconds = divmod(seconds, 60)
 
         time= []
-        if years: time.append(f"{years}Jahr ")
-        if months: time.append(f"{months}Monate ")
-        if days: time.append(f"{days}Tag ")
-        if hours: time.append(f"{hours}Std. ")
-        if minutes: time.append(f"{minutes}Min. ")
-        if seconds or not time: time.append(f"{seconds}Sek. ")
+        if years: time.append(f"{years}y ")
+        if months: time.append(f"{months}mo ")
+        if days: time.append(f"{days}d ")
+        if hours: time.append(f"{hours}h ")
+        if minutes: time.append(f"{minutes}min ")
+        if seconds or not time: time.append(f"{seconds}s ")
 
         return "".join(time)
 
