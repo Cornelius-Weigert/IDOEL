@@ -1,13 +1,19 @@
 import streamlit as st
 
-# --- SESSION STATE INITIALISIEREN ---
-st.session_state.setdefault("uploaded_logs", [])
-st.session_state.setdefault("latest_upload", None)
-st.session_state.setdefault("file_name", None)
-st.session_state.setdefault("outlier_total", 0)
-st.session_state.setdefault("outlier_checked", 0)
-
 st.set_page_config(page_title="Dashboard", layout="wide")
+
+# Session state auf leer setzen, wenn Seite gestartet wird 
+if "uploaded_logs" not in st.session_state:
+    st.session_state["uploaded_logs"] = []
+
+if "outlier_accepted" not in st.session_state:
+    st.session_state["outlier_accepted"] = 0
+
+if "outlier_checked" not in st.session_state:
+    st.session_state["outlier_checked"] = False
+
+if "latest_upload" not in st.session_state:
+    st.session_state["latest_upload"] = None
 
 # --- Kopfzeile ---
 st.title("🏠 Dashboard")
@@ -17,13 +23,13 @@ st.write("Übersicht zur interaktiven Detektion von Ausreißern in Eventlogs")
 col1, col2, col3 = st.columns(3)
 
 with col1:
-    st.metric("Hochgeladene Logs", len(st.session_state["uploaded_logs"]))
+    st.metric("Hochgeladene Logs",
+         len(st.session_state.get("uploaded_logs", [])))
 
 with col2:
     st.metric(
         "Ausreißer gefunden",
-        st.session_state["outlier_total"],
-        f"{st.session_state['outlier_checked']} geprüft"
+        st.session_state["outlier_accepted"]
     )
 
 with col3:
