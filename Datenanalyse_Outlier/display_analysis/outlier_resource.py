@@ -13,9 +13,9 @@ def show_resource_outliers(log_df):
     #filter
     st.subheader("🌟 Filter - Resource_Activity Value")
     show_res_slider = st.checkbox("Perzentilebasierte Grenzwerte anzeigen ", value = False,key="resource_slider")
-    lower_res=st.session_state['lower_res'] = 0.05
-    upper_res=st.session_state['upper_res'] = 0.95
-    factor_res=st.session_state['factor_res'] = 1.5
+    lower_res = st.session_state['lower_res'] = 0.05
+    upper_res = st.session_state['upper_res'] = 0.95
+    factor_res = st.session_state['factor_res'] = 1.5
     if show_res_slider:   
         st.write("Perzentilebasierte Grenzenwerte(Anzahl durchgefürten Aktivitäten pro Resource) ")
         lower_res = st.slider("Untere Grenze (Resource)", 0.0, 0.5, lower_res, 0.01,help="Der Anzahl von Aktivitäten, der die Resourcen so teilt, dass x% der Resourcen weniger oder gleich diesem Wert treiben(und y% mehr)")
@@ -29,18 +29,28 @@ def show_resource_outliers(log_df):
 
     outliers,log_with_counts = outlier_resources(log_df)
 
-    resource_activity_count = (log_df.groupby("resource").size().reset_index(name="resource_activity_count"))
-
+    resource_activity_count = log_df.groupby("resource").size().reset_index(name="resource_activity_count")
+    resource_unique_activity_counts = log_df.groupby("resource")["activity"].nunique().reset_index(name="unique_activity_count")
 
     for category, indices in outliers.items():
         st.write(f"### Kategorie: {category}")
+
         if indices:
             outlier_df = log_df.loc[indices, display_cols]
-            outlier_df = outlier_df.merge(
-            resource_activity_count,
-            on="resource",
-            how="left"
-           )
+
+            if category == "diverse-activity-resources":
+                outlier_df = outlier_df.merge(
+                    resource_unique_activity_counts,
+                    on="resource",
+                    how="left"
+                )
+            else:
+                outlier_df = outlier_df.merge(
+                    resource_activity_count,
+                    on="resource",
+                    how="left"
+                )
+
             selectable_outliers = st.dataframe(
                 outlier_df, 
                 width="stretch",
