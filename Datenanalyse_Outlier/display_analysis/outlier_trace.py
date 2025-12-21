@@ -1,3 +1,4 @@
+import graphviz
 import streamlit as st
 from ..statistic_analysis.outlier_trace import outlier_trace
 from ..statistic_analysis.duration_process import duration_pro_case
@@ -5,6 +6,14 @@ from .outlier_acception import accept_outliers
 from ..statistic_analysis.second_to_time import second_to_time
 from ..statistic_analysis.duration_activity import duration_pro_activity
 from ..statistic_analysis import duration_process
+
+def create_trace_graph(log_df):
+    graph = graphviz.Digraph()
+    graph.attr("node", shape='box')
+    for i in range(1, len(log_df["activity"])):
+        graph.edge(log_df["activity"].iloc[i-1], log_df["activity"].iloc[i])
+    return graph
+
 
 def show_trace_outliers(log_df):
     """
@@ -64,4 +73,5 @@ def show_trace_outliers(log_df):
                     st.dataframe(case_df[
                             ["activity","resource","timestamp","Activity_Duration_time"]]
                         , width="stretch",hide_index=True)
-                
+                    # DFG Bild
+                    st.graphviz_chart(create_trace_graph(case_df))
