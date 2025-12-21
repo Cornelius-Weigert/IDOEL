@@ -26,24 +26,23 @@ outlier_checked = st.session_state.get("outlier_checked")
 outliers_accepted = st.session_state.get("outliers_accepted")
 
 tab1, tab2, tab3, tab4,tab5 = st.tabs([
-    "Standardwerte-Vergleich",
     "Häufigkeit",
     "Prozessdauer",
     "Aktivitätsdauer",
+    "Standardwerte-Vergleich",
     "Ressourcen",])
 
 with tab1:
-    show_standard_compare(df)
+    show_frequency(df)
     
 with tab2:
-    show_frequency(df)
-
-with tab3:
     show_process_duration(df)
 
+with tab3:
+    show_activity_duration(df)
 
 with tab4:
-    show_activity_duration(df)
+    show_standard_compare(df)
 
 with tab5:
     show_resources(df)
