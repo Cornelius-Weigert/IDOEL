@@ -48,5 +48,9 @@ def map_column(df):
     if df["timestamp"].isnull().all():
         st.error("❌ Konnte keine gültigen Zeitstempel erkennen.")
         st.stop()
+    
+    # fals resource Spalte fehlt, wird leere Spalte hinzugefügt, Ausreißeranalyse funktioniert
+    if "resource" not in df.columns:
+        df["resource"] = ""
 
     return df 
