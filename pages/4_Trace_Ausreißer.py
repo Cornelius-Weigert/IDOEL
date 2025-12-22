@@ -12,9 +12,4 @@ if st.session_state.get("df") is None:
 df = st.session_state.get("df")
 log = st.session_state.get("log")
 
-# Sonstige Session States für Ausreißer
-outlier_total = st.session_state.get("outlier_total")
-outlier_checked = st.session_state.get("outlier_checked")  
-outliers_accepted = st.session_state.get("outliers_accepted")
-
 show_trace_outliers(df)

@@ -1,5 +1,8 @@
 import pandas as pd
+import streamlit as st
 from .second_to_time import second_to_time
+
+@st.cache_data
 def duration_pro_case(log_df, case_col="case_id", time_col="timestamp"):
     """
     Calculate the duration of each case in the log.

@@ -2,6 +2,7 @@ import pandas as pd
 import streamlit as st
 from . import duration_process
 
+@st.cache_data
 def outlier_trace(log_df, case_col="case_id"):
     """
     Detect outliers in traces based on various criteria.
