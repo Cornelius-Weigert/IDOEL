@@ -18,12 +18,6 @@ if st.session_state.get("df") is None:
     st.stop()
 
 df = st.session_state.get("df")
-log = st.session_state.get("log")
-
-# Sonstige Session States für Ausreißer
-outlier_total = st.session_state.get("outlier_total")
-outlier_checked = st.session_state.get("outlier_checked")  
-outliers_accepted = st.session_state.get("outliers_accepted")
 
 tab1, tab2, tab3, tab4,tab5 = st.tabs([
     "Häufigkeit",

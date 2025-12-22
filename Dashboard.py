@@ -45,5 +45,3 @@ if st.session_state["uploaded_logs"]:
         st.write(f"- 📂 {log}")
 else:
     st.write("Keine Aktivitäten bisher.")
-
-
