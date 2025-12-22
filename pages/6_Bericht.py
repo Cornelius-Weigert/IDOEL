@@ -168,46 +168,7 @@ for i in grouped_resource_outliers:
     st.download_button(
     label="Tabelle herunterladen",
     data=csv_buffer.getvalue(),
-    file_name=f"bericht_resource{category}.csv",
+    file_name=f"bericht_resource_{category}.csv",
     mime="text/csv",
     key=f"download_resource_{category}"
     )
-
-# for idx, i in enumerate(grouped_outliers(outliers)): # i[0] = category, i[1] = df, i[2] = outlier_type
-#     st.write("---")
-#     category = i[0]
-#     if i[2] == "temporal":
-#         st.subheader(f"Akzeptierte zeitliche Ausreißer - {category}")
-#     elif i[2] == "resource":
-#         st.subheader(f"Akzeptierte Ressourcen Ausreißer - {category}")
-#     # elif i[2] == "trace":
-#     #     st.subheader(f"Akzeptierte Trace Ausreißer - {category}")
-#     #     for case_id, case_df in i[1].groupby("case_id"):
-#     #         outlier_trace._render_single_trace(i[0], case_id, case_df)
-#         # continue
-#     st.dataframe(i[1],
-#                 width="stretch",
-#                 hide_index=True,)
-
-#     # Kommentar Funktion zu jeder Kategorie
-#     comment = st.text_area(
-#     "Kommentar zu dieser Kategorie",
-#     value = st.session_state.get(f"comment_{idx}",""),
-#     key = f"comment_{idx}",
-#     height=100
-#     )
-
-#     # CSV für Kategorie inklusive Kommentar
-#     csv_buffer = StringIO()
-#     df_with_comment = df.copy()
-#     df_with_comment["Kommentar"] = comment
-#     df_with_comment.to_csv(csv_buffer, index=False)
-
-#     # Download Funktion mit Kommentarspalte
-#     st.download_button(
-#     label="Tabelle herunterladen",
-#     data=csv_buffer.getvalue(),
-#     file_name=f"bericht_{category}.csv",
-#     mime="text/csv",
-#     key=f"download_{idx}"
-#     )    
