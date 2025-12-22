@@ -51,13 +51,6 @@ def grouped_outliers_trace(outliers):
 
 st.title("📑 Bericht - Ausreißeranalyse")
 
-required_keys = [
-    "df",
-    "outlier_total",
-    "outlier_checked",
-    "outlier_accepted",
-]
-
 st.button("Bericht zurücksetzen", on_click=lambda: (st.session_state["outliers_accepted"].clear(), st.session_state["trace_outliers_accepted"].clear()))
 
 
