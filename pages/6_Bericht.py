@@ -3,7 +3,26 @@ import pandas as pd
 from io import StringIO
 
 def grouped_outliers(outliers):
-    return outliers  # Placeholder for actual grouping logic
+    """
+    Group outliers by category and concatenate their dataframes.
+    
+    Args:
+        outliers: List of tuples [(category, df), ...]
+    
+    Returns:
+        List of tuples [(category, combined_df), ...] with unique categories
+    """
+    if not outliers:
+        return []
+    
+    grouped = {}
+    for category, df in outliers:
+        if category in grouped:
+            grouped[category] = pd.concat([grouped[category], df], ignore_index=True)
+        else:
+            grouped[category] = df.copy()
+    
+    return list(grouped.items())
 
 st.title("📑 Bericht - Ausreißeranalyse")
 
@@ -29,10 +48,9 @@ if not outliers:
     st.info("Es wurden noch keine Ausreißer für den Bericht ausgewählt!")
     st.stop()
 
-# To Do: outliers nach Kategorie gruppieren
 grouped_outliers = grouped_outliers(outliers)
 
-for idx, i in enumerate(outliers):
+for idx, i in enumerate(grouped_outliers):
     st.write("---")
     category = i[0]
     st.subheader(f"Akzeptierte Ausreißer - {category}")
