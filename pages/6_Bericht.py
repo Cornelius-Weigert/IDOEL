@@ -2,6 +2,8 @@ import streamlit as st
 import pandas as pd
 from io import StringIO
 
+def grouped_outliers(outliers):
+    return outliers  # Placeholder for actual grouping logic
 
 st.title("📑 Bericht - Ausreißeranalyse")
 
