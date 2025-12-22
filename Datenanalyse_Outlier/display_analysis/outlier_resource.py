@@ -61,5 +61,6 @@ def show_resource_outliers(log_df):
             ausreißer_akzeptiert_button = st.button("Ausgewählte Ausreißer akzeptieren", key=f"accept_temporal_{category}")
             if ausreißer_akzeptiert_button:
                 accept_outliers(selectable_outliers.selection.rows, category,outlier_df,comment)
+                selectable_outliers.selection.clear()
         else:
             st.write("Keine Ausreißer in dieser Kategorie gefunden.")

@@ -5,7 +5,6 @@ from ..statistic_analysis.second_to_time import second_to_time
 from .outlier_acception import accept_outliers
 from ..statistic_analysis import duration_activity
 
-
 def deduplicate_columns(log_df):
     new_cols = []
     seen = {}
@@ -109,8 +108,9 @@ def show_temporal_outliers(log_df: pd.DataFrame, case_col="case_id", timestamp_c
                 width="stretch",
                 on_select="rerun",
                 selection_mode="multi-row",
-                hide_index=True,)
-            comment = st.text_area("(optional) Kommentar zu ausgewählten Ausreißern eingeben",key=f"comment_temporal_{category}")
+                hide_index=True,
+                key=f"df_temporal_outliers_{category}")
+            comment = st.text_input("(optional) Kommentar zu ausgewählten Ausreißern eingeben",key=f"comment_temporal_{category}")
             ausreißer_akzeptiert_button = st.button("Ausgewählte Ausreißer akzeptieren", key=f"accept_temporal_{category}")
             if ausreißer_akzeptiert_button:
                 accept_outliers(outliers.selection.rows, category,outlier_df,comment)
