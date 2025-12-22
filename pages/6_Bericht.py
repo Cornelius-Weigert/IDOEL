@@ -37,17 +37,36 @@ def grouped_outliers_trace(outliers):
     Returns:
         List of tuples [(category, combined_df), ...] with unique categories
     """
-    if not outliers:
-        return []
-    
     grouped = {}
     for category, df in outliers:
         if category in grouped:
             grouped[category] = pd.concat([grouped[category], df], ignore_index=True)
         else:
             grouped[category] = df.copy()
-    
     return list(grouped.items())
+
+def comment_and_download_section(df, category, outlier_type):
+    # Kommentar Funktion zu jeder Kategorie
+    comment = st.text_area(
+        "Kommentar zu dieser Kategorie",
+        value = st.session_state.get(f"comment_{outlier_type}_{category}",""),
+        key = f"comment_{outlier_type}_{category}",
+        height=100
+        )
+    # CSV für Kategorie inklusive Kommentar
+    csv_buffer = StringIO()
+    df_with_comment = df.copy()
+    df_with_comment["Kommentar"] = comment
+    df_with_comment.to_csv(csv_buffer, index=False)
+
+    # Download Funktion mit Kommentarspalte
+    st.download_button(
+        label="Tabelle herunterladen",
+        data=csv_buffer.getvalue(),
+        file_name=f"bericht_{category}.csv",
+        mime="text/csv",
+        key=f"download_{outlier_type}_{category}"
+        )
 
 st.title("📑 Bericht - Ausreißeranalyse")
 
@@ -88,29 +107,7 @@ for i in grouped_trace_outliers: # i[0] = category, i[1] = df
             trace_visualize_button = st.button("Trace visualisieren",key=f"visualize_trace_{case_id}_{category}")
             if trace_visualize_button:
                 st.graphviz_chart(create_trace_graph(case_df))
-
-    # Kommentar Funktion zu jeder Kategorie
-    comment = st.text_area(
-    "Kommentar zu dieser Kategorie",
-    value = st.session_state.get(f"comment_{category}",""),
-    key = f"comment_{category}",
-    height=100
-    )
-
-    # CSV für Kategorie inklusive Kommentar
-    csv_buffer = StringIO()
-    df_with_comment = df.copy()
-    df_with_comment["Kommentar"] = comment
-    df_with_comment.to_csv(csv_buffer, index=False)
-
-    # Download Funktion mit Kommentarspalte
-    st.download_button(
-    label="Tabelle herunterladen",
-    data=csv_buffer.getvalue(),
-    file_name=f"bericht_{category}.csv",
-    mime="text/csv",
-    key=f"download_{category}"
-    )
+    comment_and_download_section(i[1], category, "Trace")
 
 for i in grouped_temporal_outliers:
     st.write("---")
@@ -119,26 +116,12 @@ for i in grouped_temporal_outliers:
     st.dataframe(i[1],
                 width="stretch",
                 hide_index=True,)
+    comment_and_download_section(i[1], category, "Zeitlich")
     comment = st.text_area("Kommentar zu dieser Kategorie",
         value = st.session_state.get(f"comment_temporal_{category}",""),
         key=f"comment_temporal_{category}",
         height=100)
     
-    # CSV für Kategorie inklusive Kommentar
-    csv_buffer = StringIO()
-    df_with_comment = df.copy()
-    df_with_comment["Kommentar"] = comment
-    df_with_comment.to_csv(csv_buffer, index=False)
-
-    # Download Funktion mit Kommentarspalte
-    st.download_button(
-    label="Tabelle herunterladen",
-    data=csv_buffer.getvalue(),
-    file_name=f"bericht_temporal{category}.csv",
-    mime="text/csv",
-    key=f"download_temporal_{category}"
-    )    
-
 for i in grouped_resource_outliers:
     st.write("---")
     category = i[0]
@@ -146,22 +129,4 @@ for i in grouped_resource_outliers:
     st.dataframe(i[1],
                 width="stretch",
                 hide_index=True,)
-    comment = st.text_area("Kommentar zu dieser Kategorie",
-        value = st.session_state.get(f"comment_resource_{category}",""),
-        key=f"comment_resource_{category}",
-        height=100)
-    
-    # CSV für Kategorie inklusive Kommentar
-    csv_buffer = StringIO()
-    df_with_comment = df.copy()
-    df_with_comment["Kommentar"] = comment
-    df_with_comment.to_csv(csv_buffer, index=False)
-
-    # Download Funktion mit Kommentarspalte
-    st.download_button(
-    label="Tabelle herunterladen",
-    data=csv_buffer.getvalue(),
-    file_name=f"bericht_resource_{category}.csv",
-    mime="text/csv",
-    key=f"download_resource_{category}"
-    )
+    comment_and_download_section(i[1], category, "Ressource")
