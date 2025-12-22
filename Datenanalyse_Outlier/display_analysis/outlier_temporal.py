@@ -18,7 +18,6 @@ def deduplicate_columns(log_df):
     log_df.columns = new_cols
     return log_df
 
-   
 
 def show_temporal_outliers(log_df: pd.DataFrame, case_col="case_id", timestamp_col="timestamp", activity_col="activity"):
     """
@@ -101,7 +100,6 @@ def show_temporal_outliers(log_df: pd.DataFrame, case_col="case_id", timestamp_c
 
             outlier_df["standard_activity_duration"]= outlier_df["standard_activity_duration"].apply(second_to_time)
             
-
             # display in dataframe with selectable rows
             outliers = st.dataframe(
                 outlier_df, 
