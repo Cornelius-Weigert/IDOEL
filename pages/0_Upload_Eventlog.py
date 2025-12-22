@@ -27,7 +27,16 @@ st.session_state.setdefault("outlier_total", 0)
 st.session_state.setdefault("outlier_checked", 0)
 st.session_state.setdefault("outliers_accepted", [])
 st.session_state.setdefault("outliers", None)
-
+# session states for outlier filter settings
+st.session_state.setdefault('lower_res', 0.05)
+st.session_state.setdefault('upper_res', 0.95)
+st.session_state.setdefault('factor_res', 1.5)
+st.session_state.setdefault('lower_act', 0.05)
+st.session_state.setdefault('upper_act', 0.95)
+st.session_state.setdefault('factor_act', 1.5)
+st.session_state.setdefault('lower_case', 0.05)
+st.session_state.setdefault('upper_case', 0.95)
+st.session_state.setdefault('factor_case', 1.5)
 
 
 # --- Upload Funktion ---

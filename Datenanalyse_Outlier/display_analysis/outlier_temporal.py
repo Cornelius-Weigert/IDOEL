@@ -37,10 +37,10 @@ def show_temporal_outliers(log_df: pd.DataFrame, case_col="case_id", timestamp_c
     activity_df = duration_activity.duration_pro_activity(log_df)
     #if activity_df is not None:
     show_act_slider = st.checkbox("Perzentilebasierte Grenzwerte anzeigen ", value = False,key="actvity_slider")
-    lower_act=st.session_state['lower_act'] = 0.05
-    upper_act=st.session_state['upper_act'] = 0.95
-    factor_act=st.session_state['factor_act'] = 1.5
-    if show_act_slider:   
+    lower_act =st.session_state['lower_act']
+    upper_act=st.session_state['upper_act']
+    factor_act=st.session_state['factor_act']
+    if show_act_slider: 
         st.write("Perzentilbasierte Grenzwerte (Activity Duration)")
         lower_act = st.slider("Untere Grenze(Activity)", 0.0, 0.5, lower_act, 0.01,help="Der Anzahl von Aktivität-Dauer, der die Dauern so teilt, dass x% der Dauern kürzer oder gleich diesem Wert treiben(und y% länger)")
         upper_act = st.slider("Obere Grenze (Activity)", 0.5, 1.0, upper_act, 0.01,help="Der Anzahl von Aktivität-Dauer, der die Dauern so teilt, dass y% der Dauern kürzer oder gleich diesem Wert treiben(und x% länger)")
@@ -65,7 +65,6 @@ def show_temporal_outliers(log_df: pd.DataFrame, case_col="case_id", timestamp_c
             # duration nach timestamp_col sortieren
             cols = list(outlier_df.columns)
             if timestamp_col in cols:
-                #
                 cols.remove("duration") if "duration" in cols else None
                
                 new_cols = []

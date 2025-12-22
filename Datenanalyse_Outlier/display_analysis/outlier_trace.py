@@ -14,7 +14,7 @@ def create_trace_graph(log_df):
         graph.edge(log_df["activity"].iloc[i-1], log_df["activity"].iloc[i])
     return graph
 
-# Attempt to use selectbox and expander to selct multiple traces at once --> very slow
+# fragment for single trace so that only this part reruns on interaction -> improves performance
 @st.fragment
 def _render_single_trace(category, case_id, case_df):
     """Fragment for a single trace - only this trace reruns on checkbox click."""
@@ -27,16 +27,12 @@ def _render_single_trace(category, case_id, case_df):
         trace_visualize_button = st.button("Trace visualisieren",key=f"visualize_trace_{case_id}_{category}")
         if trace_visualize_button:
             st.graphviz_chart(create_trace_graph(case_df))
-
-
-def _render_category_traces(category, outlier_df):
-    """Render all traces for a category."""
-    for case_id, case_df in outlier_df.groupby("case_id"):
-        _render_single_trace(category, case_id, case_df)
-    
-    # Akzeptieren Button für Ausreißer
-    comment = st.text_area("(optional) Kommentar zu gewählten Ausreißern eingeben",key=f"comment_trace_outliers{category}")
-    ausreißer_akzeptiert_button = st.button("Diesen Trace-Ausreißer akzeptieren", key=f"accept_temporal_{category}")
+        # Akzeptieren Button für Ausreißer
+        comment = st.text_area("Kommentar zu diesem Ausreißer eingeben",key=f"comment_trace_outliers_{case_id}_{category}")
+        accept_comment = st.button("Kommentar bestätigen & Ausreißer akzeptieren", key=f"confirm_accept_trace_{case_id}_{category}")
+        if accept_comment:
+            # ToDo add outlier logic
+            st.success(f"✅ Ausreißer für Case ID '{case_id}' in der Kategorie '{category}' wurde akzeptiert.") 
 
 
 def show_trace_outliers(log_df):
@@ -51,9 +47,9 @@ def show_trace_outliers(log_df):
     st.subheader("🌟 Filter - Case Duration")
     case_duration = duration_process.duration_pro_case(log_df)
     show_case_slider = st.checkbox("Perzentilebasierte Grenzwerte anzeigen ", value = False,key="case_slider")
-    lower_case=st.session_state['lower_case'] = 0.05
-    upper_case=st.session_state['upper_case'] = 0.95
-    factor_case=st.session_state['factor_case'] = 1.5
+    lower_case=st.session_state['lower_case']
+    upper_case=st.session_state['upper_case']
+    factor_case=st.session_state['factor_case']
     if show_case_slider:
             st.write("Perzentilebasierte Grenzenwerte(Case Duration)")
             lower_case = st.slider("Untere Grenze (Case)", 0.0, 0.5, lower_case, 0.01,help="Der Anzahl von Case-Dauer, der die Dauern so teilt, dass x% der Dauern kürzer oder gleich diesem Wert treiben(und y% länger)")
@@ -88,29 +84,6 @@ def show_trace_outliers(log_df):
                     ],
                     on=["case_id","timestamp"],
                     how="left"   
-            )
-
-            # # # mit expander nach case gruppieren und anzeige 
-            # for case_id, case_df in outlier_df.groupby("case_id"):
-            #     case_duration=second_to_time(case_df["case_duration"].iloc[0])
-            #     with st.expander(f"Trace von Case ID: {case_id} | Case_Dauer: {case_duration}"):
-            #         st.dataframe(case_df[
-            #                 ["activity","resource","timestamp","Activity_Duration_time"]]
-            #             , width="stretch",hide_index=True)
-            #         # Trace visualisieren, wenn ein Button geklickt wird
-            #         trace_visualize_button = st.button("Trace visualisieren",key=f"visualize_trace_{case_id}_{category}")
-            #         if trace_visualize_button:
-            #             st.graphviz_chart(create_trace_graph(case_df))
-            #     # Akzeptieren Button für Ausreißer
-            #     accept_with_comment = st.button("Diesen Trace-Ausreißer akzeptieren & Kommentar hinzufügen", key=f"accept_temporal_{category}_{case_id}")
-            #     accept_no_comment = st.button("Diesen Trace-Ausreißer akzeptieren ohne Kommentar", key=f"accept_temporal_no_comment_{category}_{case_id}")
-            #     if accept_with_comment:
-            #         comment = st.text_area("Kommentar zu diesem Ausreißer eingeben",key=f"comment_trace_outliers_{case_id}_{category}")
-            #         accept_comment = st.button("Kommentar bestätigen & Ausreißer akzeptieren", key=f"confirm_accept_trace_{case_id}_{category}")
-            #         if accept_comment:
-            #             # ToDo
-            #             st.success(f"✅ Ausreißer für Case ID '{case_id}' in der Kategorie '{category}' wurde akzeptiert. Kommentar: {comment}")
-            #     if accept_no_comment:
-            #         # ToDo
-            #         st.success(f"✅ Ausreißer für Case ID '{case_id}' in der Kategorie '{category}' wurde akzeptiert.")                    
-            _render_category_traces(category, outlier_df)
+            )                  
+            for case_id, case_df in outlier_df.groupby("case_id"):
+                _render_single_trace(category, case_id, case_df)

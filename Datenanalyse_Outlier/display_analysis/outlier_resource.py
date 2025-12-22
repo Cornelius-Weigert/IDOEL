@@ -13,9 +13,9 @@ def show_resource_outliers(log_df):
     #filter
     st.subheader("🌟 Filter - Resource_Activity Value")
     show_res_slider = st.checkbox("Perzentilebasierte Grenzwerte anzeigen ", value = False,key="resource_slider")
-    lower_res = st.session_state['lower_res'] = 0.05
-    upper_res = st.session_state['upper_res'] = 0.95
-    factor_res = st.session_state['factor_res'] = 1.5
+    lower_res = st.session_state.get('lower_res') #= 0.05
+    upper_res = st.session_state.get('upper_res') #= 0.95
+    factor_res = st.session_state.get('factor_res') #= 1.5
     if show_res_slider:   
         st.write("Perzentilebasierte Grenzenwerte(Anzahl durchgefürten Aktivitäten pro Resource) ")
         lower_res = st.slider("Untere Grenze (Resource)", 0.0, 0.5, lower_res, 0.01,help="Der Anzahl von Aktivitäten, der die Resourcen so teilt, dass x% der Resourcen weniger oder gleich diesem Wert treiben(und y% mehr)")
