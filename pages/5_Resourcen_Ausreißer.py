@@ -10,6 +10,5 @@ if st.session_state.get("df") is None:
     st.stop()
 
 df = st.session_state.get("df")
-log = st.session_state.get("log")
 
 show_resource_outliers(df)

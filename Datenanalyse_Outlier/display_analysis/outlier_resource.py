@@ -57,7 +57,7 @@ def show_resource_outliers(log_df):
                 on_select="rerun",
                 selection_mode="multi-row",
                 hide_index=True)
-            comment = st.text_area("(optional) Kommentar zu ausgewählten Ausreißern eingeben")
+            comment = st.text_area("(optional) Kommentar zu ausgewählten Ausreißern eingeben",key=f"comment_temporal_{category}")
             ausreißer_akzeptiert_button = st.button("Ausgewählte Ausreißer akzeptieren", key=f"accept_temporal_{category}")
             if ausreißer_akzeptiert_button:
                 accept_outliers(selectable_outliers.selection.rows, category,outlier_df,comment)
