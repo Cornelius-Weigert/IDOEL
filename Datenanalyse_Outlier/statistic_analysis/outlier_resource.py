@@ -45,7 +45,10 @@ def outlier_resources(log_df, case_col="case_id", activity_col="activity", resou
 
     #+++++++Wenn eine Resource viele verschiedene Aktivitäten ausführt+++++++++++++
     resource_unique_activity_counts = log_df.groupby(resource_col)[activity_col].nunique().rename("unique_activity_count")
-    threshold=resource_unique_activity_counts.quantile(0.95)
+    # threshold=resource_unique_activity_counts.quantile(0.95)
+    upper_res_diverse = st.session_state.get('upper_res_diverse', 0.95)
+    threshold = resource_unique_activity_counts.quantile(upper_res_diverse)
+
     diverse_activity_resources = resource_unique_activity_counts[resource_unique_activity_counts > threshold].index
     diverse_activity_rows = log_df[log_df[resource_col].isin(diverse_activity_resources)]
     outliers['Ressource_vielfältige_Aktivitäten'] = diverse_activity_rows.index.tolist()   

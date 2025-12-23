@@ -16,15 +16,20 @@ def show_resource_outliers(log_df):
     show_res_slider = st.checkbox("Perzentilebasierte Grenzwerte anzeigen ", value = False,key="resource_slider")
     lower_res = st.session_state.get('lower_res') #= 0.05
     upper_res = st.session_state.get('upper_res') #= 0.95
+    upper_res_diverse=st.session_state.get('upper_res_diverse')
     factor_res = st.session_state.get('factor_res') #= 1.5
+
     if show_res_slider:   
         st.write("Perzentilebasierte Grenzenwerte(Anzahl durchgefürten Aktivitäten pro Resource) ")
         lower_res = st.slider("Untere Grenze (Resource)", 0.0, 0.5, lower_res, 0.01,help="Der Anzahl von Aktivitäten, der die Resourcen so teilt, dass x% der Resourcen weniger oder gleich diesem Wert treiben(und y% mehr)")
         upper_res = st.slider("Obere Grenze (Resource)", 0.5, 1.0, upper_res, 0.01,help="Der Anzahl von Aktivitäten, der die Resourcen so teilt, dass y% der Resourcen weniger oder gleich diesem Wert treiben(und x% mehr)")
+        upper_res_diverse=st.slider("Obere Grenze(Vielfalt der Aktivitäten pro Ressource)",0.5,1.0,upper_res_diverse,0.01,help="Quantilesgrenze zur Identifikation von Ressourcen, die eine ungewöhnlich große Anzahl unterschiedlicher Aktivitäten ausführen.")
         factor_res = st.slider("Faktor (Resource)", 1.0, 5.0,factor_res, 0.1,help="Ein häufig verwendeter Faktor (meist 1,5), um Ausreißer zu identifizieren")
+        
         st.session_state['lower_res'] = lower_res
         st.session_state['upper_res'] = upper_res
         st.session_state['factor_res'] = factor_res
+        st.session_state['upper_res_diverse']=upper_res_diverse
 
     display_cols=["case_id","activity","resource","timestamp"]
 
