@@ -23,7 +23,7 @@ def outlier_resources(log_df, case_col="case_id", activity_col="activity", resou
 
     #+++++++Wenn die Ressource fehlt+++++++++++++++++++++++++
     missing_resource_rows = log_df[log_df[resource_col].isnull()]
-    outliers['missing-resource'] = missing_resource_rows.index.tolist() 
+    outliers['Fehlende_Ressource'] = missing_resource_rows.index.tolist() 
     
     #+++++++Wenn eine Ressource ungewöhnlich viele Aktivitäten hat+++++++++++++
     activity_counts = log_df[resource_col].value_counts()
@@ -33,7 +33,7 @@ def outlier_resources(log_df, case_col="case_id", activity_col="activity", resou
 
     high_activity_resources = activity_counts[activity_counts > upper_threshold].index
     high_activity_rows = log_df[log_df[resource_col].isin(high_activity_resources)]
-    outliers['high-activity-resources'] = high_activity_rows.index.tolist()   
+    outliers['Ressource_sehr_aktiv'] = high_activity_rows.index.tolist()   
 
     #+++++++Wenn eine Ressource ungewöhnlich wenige Aktivitäten hat+++++++++++++
     lower_res=st.session_state.get("upper_res",0.05)
@@ -41,13 +41,13 @@ def outlier_resources(log_df, case_col="case_id", activity_col="activity", resou
 
     low_activity_resources = activity_counts[activity_counts < lower_threshold].index
     low_activity_rows = log_df[log_df[resource_col].isin(low_activity_resources)]
-    outliers['low-activity-resources'] = low_activity_rows.index.tolist()   
+    outliers['Ressource_wenig_aktiv'] = low_activity_rows.index.tolist()   
 
     #+++++++Wenn eine Resource viele verschiedene Aktivitäten ausführt+++++++++++++
     resource_unique_activity_counts = log_df.groupby(resource_col)[activity_col].nunique().rename("unique_activity_count")
     threshold=resource_unique_activity_counts.quantile(0.95)
     diverse_activity_resources = resource_unique_activity_counts[resource_unique_activity_counts > threshold].index
     diverse_activity_rows = log_df[log_df[resource_col].isin(diverse_activity_resources)]
-    outliers['diverse-activity-resources'] = diverse_activity_rows.index.tolist()   
+    outliers['Ressource_vielfältige_Aktivitäten'] = diverse_activity_rows.index.tolist()   
 
     return outliers,log_with_counts

@@ -4,7 +4,7 @@ import pandas as pd
 from ..statistic_analysis.second_to_time import second_to_time
 from .outlier_acception import accept_outliers
 from ..statistic_analysis import duration_activity
-
+from .description import OUTLIER_DESCRIPTIONS
 
 def deduplicate_columns(log_df):
     new_cols = []
@@ -55,6 +55,9 @@ def show_temporal_outliers(log_df: pd.DataFrame, case_col="case_id", timestamp_c
     # duration auch anzeigen
     for category, indices in outliers.items():
         st.write(f"### Kategorie: {category}")
+        if category in OUTLIER_DESCRIPTIONS:
+            st.caption(OUTLIER_DESCRIPTIONS[category]["description"])
+
         if indices:
             outlier_df = log_with_duration.loc[indices].copy()
 

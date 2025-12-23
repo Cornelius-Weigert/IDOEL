@@ -6,6 +6,7 @@ from .outlier_acception import accept_outliers
 from ..statistic_analysis.second_to_time import second_to_time
 from ..statistic_analysis.duration_activity import duration_pro_activity
 from ..statistic_analysis import duration_process
+from .description import OUTLIER_DESCRIPTIONS
 
 def create_trace_graph(log_df):
     graph = graphviz.Digraph()
@@ -66,6 +67,9 @@ def show_trace_outliers(log_df):
     activity_df = duration_pro_activity(log_df)
 
     for category, indices in outliers.items():
+        # if category in OUTLIER_DESCRIPTIONS:
+        st.caption(OUTLIER_DESCRIPTIONS[category]["description"])
+
         with st.expander(f"### Kategorie: {category} | Anzahl Cases: {len(set(log_df.loc[indices, 'case_id']))}"):
             if indices:
                 outlier_df = log_df.loc[indices]

@@ -41,26 +41,26 @@ def temporal_outliers(log_df, case_col="case_id", activity_col="activity", times
     else:
         log_df[timestamp_col] = log_df[timestamp_col].dt.tz_convert("Europe/Berlin")
     future_rows = log_df[log_df[timestamp_col] > now]
-    outliers['future-timestamp'] = future_rows.index.tolist()
+    outliers['Zeitstempel_in_Zukunft'] = future_rows.index.tolist()
 
     
     #+++++++Wenn Timestamp fehlt+++++++++++++++++++++++++
     missing_timestamp_rows = log_df[log_df[timestamp_col].isnull()]
-    outliers['missing-timestamp'] = missing_timestamp_rows.index.tolist()  
+    outliers['Fehlender_Zeitstempel'] = missing_timestamp_rows.index.tolist()  
 
     #++++++++Wenn die Dauer zwischen Aktivitäten ungewöhnlich lang ist+++++++++++++
     long_duration_threshold = log_df['duration'].quantile(st.session_state['upper_act'])
     long_duration_rows = log_df[log_df['duration'] > long_duration_threshold]
-    outliers['long-activity-duration'] = long_duration_rows.index.tolist()
+    outliers['Lange_Aktivitätsdauer'] = long_duration_rows.index.tolist()
 
     #++++++++Wenn die Dauer zwischen Aktivitäten ungewöhnlich kurz ist+++++++++++++
     short_duration_threshold = log_df['duration'].quantile(st.session_state['lower_act'])  
     short_duration_rows = log_df[log_df['duration'] < short_duration_threshold]
-    outliers['short-activity-duration'] = short_duration_rows.index.tolist() 
+    outliers['Kurze_Aktivitätsdauer'] = short_duration_rows.index.tolist() 
 
     #+++++++Wenn Timestamp vor dem vorherigen Timestamp liegt+++++++++++++
     negative_duration_rows = log_df[log_df['duration'] < 0]
-    outliers['negative-activity-duration'] = negative_duration_rows.index.tolist()
+    outliers['Negative_Aktivitätsdauer'] = negative_duration_rows.index.tolist()
 
     # Nur relevante Spalten für die Anzeige behalten
     display_cols = [case_col, 'prev_activity',activity_col,'next_activity', timestamp_col, 'prev_timestamp', 'duration','standard_activity_duration']
