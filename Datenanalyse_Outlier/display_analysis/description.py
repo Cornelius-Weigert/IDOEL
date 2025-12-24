@@ -11,7 +11,8 @@ OUTLIER_DESCRIPTIONS = {
 
     "Ressource_wenig_aktiv": {
         "description": "Diese Ressource kommt im Event Log nur sehr selten vor. "
-                       "Dies kann auf eine Sonderrolle oder auf fehlende Daten hindeuten."
+                       "Dies kann auf eine Sonderrolle oder auf fehlende Date"
+                       "n hindeuten."
     },
 
     "Ressource_vielfältige_Aktivitäten": {
