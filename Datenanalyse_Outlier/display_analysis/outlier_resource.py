@@ -69,7 +69,6 @@ def show_resource_outliers(log_df):
                 f"👤 Ressource: {resource} ({label} {value})",
                 expanded=False
             ):
-                # st.dataframe(res_df,hide_index=True,width="stretch",key=keyname)
 
                 selectable_outliers = st.dataframe(
                 res_df_display,
