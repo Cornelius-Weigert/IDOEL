@@ -3,6 +3,10 @@ import pandas as pd
 from io import StringIO
 from Datenanalyse_Outlier.statistic_analysis.second_to_time import second_to_time
 from Datenanalyse_Outlier.display_analysis.outlier_trace import create_trace_graph
+from Datenanalyse_Outlier.statistic_analysis import temporal_outliers
+from streamlit_elements import elements, nivo, mui
+import re
+from Datenanalyse_Outlier.map_columns import map_column
 
 def grouped_outliers(outliers):
     """
@@ -79,9 +83,15 @@ if df is None:
     st.warning("Bitte zuerst Ausreißeranalyse durchführen!")
     st.stop()
 
+# für die Anzeige der case_id in der Graphik, funktioniert aber noch nicht so richtig
+df = map_column(df.copy())    
+
 # Sicherheitscheck für outliers (falls leer)
 outliers = st.session_state.get("outliers_accepted",[])
 trace_outliers = st.session_state.get("trace_outliers_accepted",[])
+grouped_trace_outliers = []
+grouped_temporal_outliers = []
+grouped_resource_outliers = []
 
 if len(outliers) == 0 and len(trace_outliers) == 0:
     st.info("Es wurden noch keine Ausreißer für den Bericht ausgewählt!")
@@ -109,24 +119,85 @@ for i in grouped_trace_outliers: # i[0] = category, i[1] = df
                 st.graphviz_chart(create_trace_graph(case_df))
     comment_and_download_section(i[1], category, "Trace")
 
-for i in grouped_temporal_outliers:
-    st.write("---")
-    category = i[0]
-    st.subheader(f"Akzeptierte zeitliche Ausreißer - {category}")
-    st.dataframe(i[1],
-                width="stretch",
-                hide_index=True,)
-    comment_and_download_section(i[1], category, "Zeitlich")
-    comment = st.text_area("Kommentar zu dieser Kategorie",
-        value = st.session_state.get(f"comment_temporal_{category}",""),
-        key=f"comment_temporal_{category}",
-        height=100)
-    
+# Anzeige der akzeptierten Resource Ausreißer
 for i in grouped_resource_outliers:
-    st.write("---")
     category = i[0]
     st.subheader(f"Akzeptierte Ressourcen Ausreißer - {category}")
-    st.dataframe(i[1],
-                width="stretch",
-                hide_index=True,)
+    st.dataframe(i[1], width="stretch",hide_index=True,)
     comment_and_download_section(i[1], category, "Ressource")
+    
+# Konvertierung von der Zeit wegen Anzeigenproblemen 
+def duration_string_to_seconds(duration_str):
+    if not isinstance(duration_str, str):
+        return None
+    pattern = r'(?:(\d+)mo)?\s*(?:(\d+)d)?\s*(?:(\d+)h)?\s*(?:(\d+)s)?'
+    match = re.match(pattern, duration_str.strip())
+    if not match:
+        return None
+    months, days, hours, seconds = match.groups(default="0")
+    return int(months)*30*24*3600 + int(days)*24*3600 + int(hours)*3600 + int(seconds)
+
+# Temporale Ausreißer: Button für Nivo-Chart
+for category, data_df in grouped_temporal_outliers:
+    temp_df = map_column(data_df.copy())
+    st.write("---")
+    # Anzeige Tabelle + Name Kategorie
+    st.subheader(f"Akzeptierte Zeitliche Ausreißer - {category}")
+    st.dataframe(data_df, width="stretch",hide_index=True,)
+    # Kommentar und Download
+    comment_and_download_section(data_df, category, "Zeitlich")
+
+    chart_key = f"show_chart_{category}"
+    if chart_key not in st.session_state: 
+        st.session_state[chart_key] = False
+    
+    if st.button(f"📊 Zeitliche Ausreißer visualisieren ({category})", key=f"chart_btn_{category}"):
+        st.session_state[chart_key] = not st.session_state[chart_key]
+    
+    if st.session_state[chart_key]:
+        # Datenaufbereitung 
+        scatter_data = []
+        for _, row in data_df.iterrows():
+            ts = row["timestamp"]
+            dur = row.get("Activity_Duration_time") or row.get("case_duration") or row.get("duration") or row.get("value")
+            c_id = str(row["case_id"])
+            if pd.isna(ts) or pd.isna(dur):
+                continue
+            try:
+                # Zeitstempel exakt formatieren, um 'setMilliseconds' Fehler zu vermeiden
+                ts_dt = pd.to_datetime(ts)
+                ts_iso = ts_dt.strftime("%Y-%m-%dT%H:%M:%S")
+                
+                if isinstance(dur, str):
+                    dur_sec = duration_string_to_seconds(dur)
+                else:
+                    dur_sec = float(dur)
+                    
+                if dur_sec is not None:
+                    scatter_data.append({
+                        "x": ts_iso, 
+                        "y": dur_sec,
+                        "case_id": c_id
+                    })
+            except:
+                continue
+
+        # Nivo Chart innerhalb eines Mui Containers anzeigen
+        if scatter_data:
+            safe_id = re.sub(r'\W+', '', category)
+            with elements(f"scatter_elements_{safe_id}"):
+                # Die Box gibt dem Chart den nötigen Platz zum Rendern
+                with mui.Box(sx={"height": 450, "width": "100%"}):
+                    nivo.ScatterPlot(
+                        data=[{"id": str(category), "data": scatter_data}],
+                        xScale={"type": "time", "format": "%Y-%m-%dT%H:%M:%S", "precision": "second","useUTC": False},
+                        xFormat="time:%Y-%m-%d %H:%M",
+                        yScale={"type": "linear", "min": "auto", "max": "auto"},
+                        margin={"top": 40, "right": 50, "bottom": 80, "left": 70},
+                        useMesh=True,
+                        colors={"scheme": "nivo"},
+                        axisBottom={"format": "%d.%m.%y", "tickRotation": -45},
+                        axisLeft={"legend": "Dauer (s)", "legendOffset": -50}
+            )
+        else:
+            st.info("Keine validen Daten zur Visualisierung gefunden.")
