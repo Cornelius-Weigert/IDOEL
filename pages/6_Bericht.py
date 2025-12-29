@@ -84,7 +84,7 @@ if df is None:
     st.stop()
 
 # für die Anzeige der case_id in der Graphik, funktioniert aber noch nicht so richtig
-df = map_column(df.copy())    
+# df = map_column(df.copy())    
 
 # Sicherheitscheck für outliers (falls leer)
 outliers = st.session_state.get("outliers_accepted",[])
@@ -139,7 +139,6 @@ def duration_string_to_seconds(duration_str):
 
 # Temporale Ausreißer: Button für Nivo-Chart
 for category, data_df in grouped_temporal_outliers:
-    temp_df = map_column(data_df.copy())
     st.write("---")
     # Anzeige Tabelle + Name Kategorie
     st.subheader(f"Akzeptierte Zeitliche Ausreißer - {category}")
@@ -153,51 +152,62 @@ for category, data_df in grouped_temporal_outliers:
     
     if st.button(f"📊 Zeitliche Ausreißer visualisieren ({category})", key=f"chart_btn_{category}"):
         st.session_state[chart_key] = not st.session_state[chart_key]
-    
     if st.session_state[chart_key]:
-        # Datenaufbereitung 
         scatter_data = []
+        
         for _, row in data_df.iterrows():
-            ts = row["timestamp"]
-            dur = row.get("Activity_Duration_time") or row.get("case_duration") or row.get("duration") or row.get("value")
-            c_id = str(row["case_id"])
-            if pd.isna(ts) or pd.isna(dur):
+            # 1. Zeitstempel (X-Achse)
+            ts = row.get("timestamp")
+            
+            # 2. Dauer (Y-Achse) - Wir nehmen die Spalte aus deinem Beispiel
+            dur_raw = row.get("standard_activity_duration")
+            
+            if pd.isna(ts) or dur_raw is None or dur_raw == "-":
                 continue
+                
             try:
-                # Zeitstempel exakt formatieren, um 'setMilliseconds' Fehler zu vermeiden
+                # X-Achse konvertieren
                 ts_dt = pd.to_datetime(ts)
                 ts_iso = ts_dt.strftime("%Y-%m-%dT%H:%M:%S")
                 
-                if isinstance(dur, str):
-                    dur_sec = duration_string_to_seconds(dur)
+                # Y-Achse konvertieren
+                sec = 0
+                if isinstance(dur_raw, str):
+                    # Reinigung: Pandas mag 'min' nicht, es will 'm' oder 'mins'
+                    clean_dur = dur_raw.replace("min", "m")
+                    try:
+                        sec = pd.to_timedelta(clean_dur).total_seconds()
+                    except:
+                        # Falls das auch scheitert, probieren wir deine Regex-Funktion
+                        sec = duration_string_to_seconds(dur_raw) or 0
                 else:
-                    dur_sec = float(dur)
-                    
-                if dur_sec is not None:
+                    sec = float(dur_raw)
+                
+                # In Minuten umrechnen
+                dur_sec = sec 
+                
+                if dur_sec > 0:
                     scatter_data.append({
                         "x": ts_iso, 
-                        "y": dur_sec,
-                        "case_id": c_id
+                        "y": round(float(dur_sec), 2)
                     })
             except:
                 continue
 
-        # Nivo Chart innerhalb eines Mui Containers anzeigen
         if scatter_data:
             safe_id = re.sub(r'\W+', '', category)
             with elements(f"scatter_elements_{safe_id}"):
-                # Die Box gibt dem Chart den nötigen Platz zum Rendern
                 with mui.Box(sx={"height": 450, "width": "100%"}):
                     nivo.ScatterPlot(
                         data=[{"id": str(category), "data": scatter_data}],
-                        xScale={"type": "time", "format": "%Y-%m-%dT%H:%M:%S", "precision": "second","useUTC": False},
+                        xScale={"type": "time", "format": "%Y-%m-%dT%H:%M:%S", "useUTC": False},
                         xFormat="time:%Y-%m-%d %H:%M",
                         yScale={"type": "linear", "min": "auto", "max": "auto"},
                         margin={"top": 40, "right": 50, "bottom": 80, "left": 70},
                         useMesh=True,
                         colors={"scheme": "nivo"},
-                        axisBottom={"format": "%d.%m.%y", "tickRotation": -45},
-                        axisLeft={"legend": "Dauer (s)", "legendOffset": -50}
-            )
+                        axisBottom={"format": "%d.%m.%y", "tickRotation": -45, "legend": "Zeitpunkt", "legendOffset": 60},
+                        axisLeft={"legend": "Dauer (sec)", "legendOffset": -60}
+                    )
         else:
-            st.info("Keine validen Daten zur Visualisierung gefunden.")
+            st.info("Keine validen Daten zur Visualisierung gefunden. Prüfe, ob die Dauer-Spalte Werte enthält.")
