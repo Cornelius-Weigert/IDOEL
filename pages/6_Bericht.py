@@ -122,8 +122,8 @@ if len(outliers) > 0:
     grouped_temporal_outliers, grouped_resource_outliers = grouped_outliers(outliers)
 if len(trace_outliers) > 0:
     grouped_trace_outliers = grouped_outliers_trace(trace_outliers)
-if len(resource_outliers)>0:
-    _,grouped_resource_outliers= grouped_outliers(resource_outliers, has_type=False)
+# if len(resource_outliers)>0:
+#     _,grouped_resource_outliers= grouped_outliers(resource_outliers, has_type=False)
 
 # Anzeige der akzeptierten trace Ausreißer
 for i in grouped_trace_outliers: # i[0] = category, i[1] = df
@@ -151,24 +151,23 @@ for i in grouped_trace_outliers: # i[0] = category, i[1] = df
 #     comment_and_download_section(i[1], category, "Ressource")
 
 # Anzeige der akzeptierten Resource Ausreißer 
-grouped_resource_outliers = st.session_state.get("resource_outliers_accepted",[])
-for category, df_all in grouped_resource_outliers:
-    resource= df_all["resource"].iloc[0]
-    # category=i[0]
+resource_outliers = st.session_state.get("resource_outliers_accepted",{})
+if resource_outliers:
     st.write("---")
-    st.subheader(f"Akzeptierte Ressourcen Ausreißer - {category}")
-    for resource, res_df in df_all.groupby("resource"):
-        # comment = i[1]["Kommentar"].iloc[0] if "Kommentar" in i[1].columns else ""
-        # Resource fragment
-        with st.expander(f"Ressource: {resource} | Anzahl Activities: {len(res_df)}", expanded=False):
-            # Tabelle: alle Events dieser Resource
-            st.dataframe(
-                res_df[["case_id", "activity", "timestamp"]],hide_index=True,width="stretch",key = f"df_{category}_{resource}")
-            # Barchart: Aktivitätsverteilung
-            activity_counts = res_df.groupby("activity").size().reset_index(name="count")
-            st.caption("📊 Aktivitätsverteilung dieser Ressource")
-            st.bar_chart(activity_counts.set_index("activity")["count"])            
-            comment_and_download_section(res_df, category, "Ressource",resource)
+    st.subheader(f"Akzeptierte Ressourcen Ausreißer")
+    for category, df_all in resource_outliers.items():
+        st.markdown(f"Kategotie:{category}")
+        for resource, res_df in df_all.groupby("resource"):
+            # Resource fragment
+            with st.expander(f"Ressource: {resource} | Anzahl Activities: {len(res_df)}"):
+                # Tabelle: alle Events dieser Resource
+                st.dataframe(
+                    res_df[["case_id", "activity", "timestamp"]],hide_index=True,width="stretch",key = f"df_{category}_{resource}")
+                # Barchart: Aktivitätsverteilung
+                activity_counts = res_df.groupby("activity").size().reset_index(name="count")
+                st.caption("📊 Aktivitätsverteilung dieser Ressource")
+                st.bar_chart(activity_counts.set_index("activity")["count"])            
+        comment_and_download_section(df_all, category, outlier_type="Ressource")
     
 # Konvertierung von der Zeit wegen Anzeigenproblemen 
 def duration_string_to_seconds(duration_str):

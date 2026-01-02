@@ -2,9 +2,13 @@ import streamlit as st
 from ..statistic_analysis.outlier_resource import outlier_resources
 from .outlier_acception import accept_outliers
 from.description import OUTLIER_DESCRIPTIONS
+import pandas as pd
 
-if "resource_outliers_accepted" not in st.session_state:
-    st.session_state["resource_outliers_accepted"] = []
+if "resource_outliers_accepted" not in st.session_state or not isinstance(
+    st.session_state["resource_outliers_accepted"], dict
+):
+    st.session_state["resource_outliers_accepted"] = {}
+
 if "outlier_accepted" not in st.session_state:
     st.session_state["outlier_accepted"] = 0
 if "refresh_bericht" not in st.session_state:
@@ -28,7 +32,18 @@ def render_single_resource(category, resource, resource_df,label, value):
             # ToDo add outlier logic
             df_copy=resource_df.copy()
             df_copy["Kommentar"] = comment
-            st.session_state["resource_outliers_accepted"].append([category,df_copy])
+            # st.session_state["resource_outliers_accepted"].append([category,df_copy])
+        
+
+            if category in st.session_state["resource_outliers_accepted"]:
+                st.session_state["resource_outliers_accepted"][category] = pd.concat(
+                    [st.session_state["resource_outliers_accepted"][category], df_copy],
+                    ignore_index=True
+                )
+            else:
+                st.session_state["resource_outliers_accepted"][category] = df_copy
+
+
             st.session_state["outlier_accepted"] += 1
             st.success(f"✅ Ausreißer für Ressource '{resource}' in der Kategorie '{category}' wurde akzeptiert.")
             st.session_state["refresh_bericht"]=not st.session_state.get("refresh_bricht",False)
