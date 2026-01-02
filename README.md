@@ -28,24 +28,33 @@ Stelle sicher, dass Python 3.9+ installiert ist.
    ```bash
    git clone [https://github.com/Cornelius-Weigert/SWPS.git](https://github.com/Cornelius-Weigert/SWPS.git)
    cd SWPS
+   ´´´
 
 2. Abhängigkeiten installieren:
    ```bash
    pip install pm4py pandas streamlit
+   ´´´
 
 3. Anwendung starten
 Starte die Streamlit-App mit folgendem Befehl:
     ```bash
     streamlit run Dashboard.py
+    ´´´
 
-🛠 Technologie-Stack
-Backend: Python
-Frontend: Streamlit (Web-Framework)
-Datenverarbeitung: Pandas, PM4Py (Process Mining for Python)
-Detektion: Scikit-Learn / Statistische Methoden
+---
 
-🧬 Workflow in IDOEL
-Input: Hochladen des Event Logs.
-Highlighting: Markierung von Traces/Events mit hoher Ausreißer-Wahrscheinlichkeit.
-Human Decision: Der Experte nutzt Schieberegler oder Buttons, um Ausreißer zu bestätigen oder als "validen Sonderfall" zu markieren.
-Output: Download einer CSV-Datei mit allen Outliern
+## 🛠 Technologie-Stack
+
+* **Backend:** Python
+* **Frontend:** [Streamlit](https://streamlit.io/) (Web-Framework)
+* **Datenverarbeitung:** Pandas, PM4Py (Process Mining for Python)
+* **Detektion:** Scikit-Learn / Statistische Methoden
+
+---
+
+## 🧬 Workflow in IDOEL
+
+1. **Input:** Hochladen des Event Logs.
+2. **Highlighting:** Markierung von Traces/Events mit hoher Ausreißer-Wahrscheinlichkeit.
+3. **Human Decision:** Der Experte nutzt Schieberegler oder Buttons, um Ausreißer zu bestätigen oder als "validen Sonderfall" zu markieren.
+4. **Output:** Download des optimierten Event Logs.
