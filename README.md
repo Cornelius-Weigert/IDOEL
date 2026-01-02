@@ -1,10 +1,51 @@
-Funktionen der Automatischen Ausreißerdetektion:
-    Upload & Analyse: Nutzer laden ihre Event Logs direkt in die Streamlit-basierte Oberfläche hoch.
-    Interaktive Detektion: Die Software markiert statistische Anomalien, überlässt aber dem Experten die finale Entscheidung.
-    Experten-Validierung: Über ein intuitives Interface können Nutzer entscheiden: Ist das ein Datenfehler, der bereinigt werden muss, oder ein geschäftskritischer Spezialfall, der erhalten bleiben soll?
-    Clean Log Export: Das Ergebnis ist ein validierter, 'sauberer' Event Log, der die tatsächliche Prozessrealität widerspiegelt."
+# IDOEL 🔍 – Interactive Detection of Outliers in Event Logs
 
-Nutzung: 
-    1. Git Repository clonen
-    2. Die Pakages streamlit, pm4py & pandas installieren
-    3. folgenden Befehl in der virtuellen Umgebung ausführen: "streamlit run Dashboard.py"
+> **"Garbage in, Garbage out."** IDOEL schließt die Lücke zwischen automatischer Ausreißer-Erkennung und menschlichem Domänenwissen im Process Mining.
+
+---
+
+## 📖 Über das Projekt
+
+In der Praxis scheitern Process-Mining-Analysen oft an mangelnder Datenqualität. Herkömmliche Algorithmen zur Ausreißer-Erkennung agieren oft als "Blackbox" und löschen Datenpunkte rein statistisch, ohne den geschäftlichen Kontext zu verstehen.
+
+**IDOEL (Interactive Detection of Outliers in Event Logs)** ist eine interaktive Webanwendung, die einen **Human-in-the-Loop-Ansatz** verfolgt. Sie ermöglicht es Domänenexperten, potenzielle Ausreißer systematisch zu validieren und so die Qualität der Inputdaten für das Process Mining nachhaltig zu steigern.
+
+### Kernfunktionen
+* **Interaktiver Upload:** Einfacher Import von Event Logs (CSV/XES).
+* **Geführte Detektion:** Automatisierte Identifikation potenzieller Anomalien.
+* **Experten-Validierung:** Intuitive UI zur Entscheidung über das Vorhandensein von Ausreißern.
+* **Daten-Reparatur:** Export von bereinigten Logs für valide Analyseergebnisse.
+
+---
+
+## 🚀 Quick Start
+
+### Voraussetzungen
+Stelle sicher, dass Python 3.9+ installiert ist.
+
+### Installation
+1. Repository klonen:
+   ```bash
+   git clone [https://github.com/Cornelius-Weigert/SWPS.git](https://github.com/Cornelius-Weigert/SWPS.git)
+   cd SWPS
+
+2. Abhängigkeiten installieren:
+   ```bash
+   pip install pm4py pandas streamlit
+
+3. Anwendung starten
+Starte die Streamlit-App mit folgendem Befehl:
+    ```bash
+    streamlit run Dashboard.py
+
+🛠 Technologie-Stack
+Backend: Python
+Frontend: Streamlit (Web-Framework)
+Datenverarbeitung: Pandas, PM4Py (Process Mining for Python)
+Detektion: Scikit-Learn / Statistische Methoden
+
+🧬 Workflow in IDOEL
+Input: Hochladen des Event Logs.
+Highlighting: Markierung von Traces/Events mit hoher Ausreißer-Wahrscheinlichkeit.
+Human Decision: Der Experte nutzt Schieberegler oder Buttons, um Ausreißer zu bestätigen oder als "validen Sonderfall" zu markieren.
+Output: Download einer CSV-Datei mit allen Outliern
