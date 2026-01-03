@@ -46,12 +46,12 @@ OUTLIER_DESCRIPTIONS = {
     },
 
     "Lange_Traces": {
-        "description": "Diese Prozessinstanzrn enthalten deutlich mehr Events als üblich "
-                       "und könnte auf Schleifen oder Sonderfälle hindeuten."
+        "description": "Diese Prozessinstanzen enthalten deutlich mehr Events als üblich "
+                       "und könnten daher auf Schleifen oder Sonderfälle hindeuten."
     },
 
     "Kurze_Traces": {
-        "description": "Diese Traces enthalten sehr wenige Events, könnte unvollständig oder abgebrochen sein."
+        "description": "Diese Traces enthalten sehr wenige Events und könnten deswegen unvollständig oder abgebrochen sein."
     },
 
     "Traces_viele_Aktivitäten": {
@@ -61,11 +61,11 @@ OUTLIER_DESCRIPTIONS = {
 
     "Traces_wenig_Aktivitäten": {
         "description": "Diese Traces bestehen aus sehr wenigen unterschiedlichen Aktivitäten "
-                       "und können auf vereinfachte oder fehlerhafte Abläufe hinweisen."
+                       "und könnten deshalb auf vereinfachte oder fehlerhafte Abläufe hinweisen."
     },
 
     "Ungewöhnliche_Tracesequenz": {
-        "description": "Die Aktivitätsabfolge dieses Traces kommt im gesamten Event Log nur einmal vor "
+        "description": "Die Aktivitätsabfolge dieser Traces kommt im gesamten Event Log nur einmal vor "
                        "und stellt daher eine seltene Prozessvariante dar."
     },
 
