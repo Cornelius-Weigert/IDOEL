@@ -48,5 +48,5 @@ Starte die Streamlit-App mit folgendem Befehl:
 
 1. **Input:** Hochladen des Event Logs.
 2. **Highlighting:** Markierung von Traces/Events mit hoher Ausreißer-Wahrscheinlichkeit.
-3. **Human Decision:** Der Experte kann Ausreißer bestätigen oder sie als "validen Sonderfall" ignorieren.
+3. **Human Decision:** Der Experte kann Ausreißer bestätigen und einen Kommentar ergänzen.
 4. **Output:** Download der durch den Experten validierten Ausreißer.
