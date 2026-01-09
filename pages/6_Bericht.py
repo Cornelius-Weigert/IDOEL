@@ -88,11 +88,10 @@ def comment_and_download_section(df, category, outlier_type,resource=None):
         mime="text/csv",
         key=f"download_{outlier_type}_{category}{resource_str}"
         )
-
+    
 st.title("📑 Bericht - Ausreißeranalyse")
 
 st.button("Bericht zurücksetzen", on_click=lambda: (st.session_state["outliers_accepted"].clear(), st.session_state["trace_outliers_accepted"].clear(), st.session_state["resource_outliers_accepted"].clear()))
-
 
 # Sicherheitscheck für df (falls leer)
 df = st.session_state.get("df")
@@ -149,7 +148,7 @@ if resource_outliers:
     st.write("---")
     st.subheader(f"Akzeptierte Ressourcen Ausreißer")
     for category, df_all in resource_outliers.items():
-        st.markdown(f"Kategotie:{category}")
+        st.markdown(f"Kategorie:{category}")
         for resource, res_df in df_all.groupby("resource"):
             # Resource fragment
             with st.expander(f"Ressource: {resource} | Anzahl Activities: {len(res_df)}"):
