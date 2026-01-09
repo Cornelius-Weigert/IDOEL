@@ -10,7 +10,7 @@ __pycache__/
 *.pyc
 *.pyo
 *.pyd
-
+Dashboard_log/
 # pm4py practice 
 practice/pm4py_test.py
 
@@ -22,7 +22,7 @@ Thumbs.db
 # Temporary files
 *.log
 *.tmp
-d_log.txt
+
 
 
 BPI_Challenge_2019.xes

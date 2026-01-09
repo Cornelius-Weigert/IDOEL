@@ -14,7 +14,7 @@ In der Praxis scheitern Process-Mining-Analysen oft an mangelnder Datenqualität
 * **Interaktiver Upload:** Einfacher Import von Event Logs (CSV/XES).
 * **Geführte Detektion:** Automatisierte Identifikation potenzieller Anomalien.
 * **Experten-Validierung:** Intuitive UI zur Entscheidung über das Vorhandensein von Ausreißern.
-* **Daten-Reparatur:** Export von bereinigten Logs für valide Analyseergebnisse.
+* **Daten-Reparatur:** Export der validierten Ausreißer.
 
 
 ## 🚀 Quick Start
@@ -48,5 +48,5 @@ Starte die Streamlit-App mit folgendem Befehl:
 
 1. **Input:** Hochladen des Event Logs.
 2. **Highlighting:** Markierung von Traces/Events mit hoher Ausreißer-Wahrscheinlichkeit.
-3. **Human Decision:** Der Experte nutzt Schieberegler oder Buttons, um Ausreißer zu bestätigen oder als "validen Sonderfall" zu markieren.
-4. **Output:** Download des optimierten Event Logs.
+3. **Human Decision:** Der Experte kann Ausreißer bestätigen und einen Kommentar ergänzen.
+4. **Output:** Download der durch den Experten validierten Ausreißer.
