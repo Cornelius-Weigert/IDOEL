@@ -91,7 +91,7 @@ def comment_and_download_section(df, category, outlier_type,resource=None):
 
 st.title("📑 Bericht - Ausreißeranalyse")
 
-st.button("Bericht zurücksetzen", on_click=lambda: (st.session_state["outliers_accepted"].clear(), st.session_state["trace_outliers_accepted"].clear()))
+st.button("Bericht zurücksetzen", on_click=lambda: (st.session_state["outliers_accepted"].clear(), st.session_state["trace_outliers_accepted"].clear(), st.session_state["resource_outliers_accepted"].clear()))
 
 
 # Sicherheitscheck für df (falls leer)
