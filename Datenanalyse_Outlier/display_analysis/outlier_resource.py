@@ -46,7 +46,7 @@ def render_single_resource(category, resource, resource_df,label, value):
 
             st.session_state["outlier_accepted"] += 1
             st.success(f"✅ Ausreißer für Ressource '{resource}' in der Kategorie '{category}' wurde akzeptiert.")
-            st.session_state["refresh_bericht"]=not st.session_state.get("refresh_bricht",False)
+            st.session_state["refresh_bericht"]=not st.session_state.get("refresh_bericht",False)
 
 def show_resource_outliers(log_df):
     """
