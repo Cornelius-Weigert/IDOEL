@@ -30,7 +30,7 @@ Stelle sicher, dass Python 3.9+ installiert ist.
 
 2. Abhängigkeiten installieren:
    ```bash
-   pip install pm4py pandas streamlit
+   pip install requirements.txt
 
 3. Anwendung starten
 Starte die Streamlit-App mit folgendem Befehl:
