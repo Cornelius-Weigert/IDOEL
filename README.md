@@ -30,19 +30,12 @@ Stelle sicher, dass Python 3.9+ installiert ist.
 
 2. Abhängigkeiten installieren:
    ```bash
-   pip install pm4py pandas streamlit
+   pip install requirements.txt
 
 3. Anwendung starten
 Starte die Streamlit-App mit folgendem Befehl:
     ```bash
     streamlit run Dashboard.py
-
-
-## 🛠 Technologie-Stack
-
-* **Backend:** Python
-* **Frontend:** [Streamlit](https://streamlit.io/) (Web-Framework)
-* **Datenverarbeitung:** Pandas, PM4Py (Process Mining for Python)
 
 ## 🧬 Workflow in IDOEL
 
@@ -50,3 +43,21 @@ Starte die Streamlit-App mit folgendem Befehl:
 2. **Highlighting:** Markierung von Traces/Events mit hoher Ausreißer-Wahrscheinlichkeit.
 3. **Human Decision:** Der Experte kann Ausreißer bestätigen und einen Kommentar ergänzen.
 4. **Output:** Download der durch den Experten validierten Ausreißer.
+
+
+## 📑 Inhalt der Pages
+
+Das Framework ist modular aufgebaut. Die einzelnen Schritte können über die Sidebar angesteuert werden:
+
+* **[1_Eventlog_Upload.py](./pages/1_Eventlog_Upload.py):** Zentraler Einstiegspunkt für den Import von Event Logs (CSV/XES) und die initiale Datenaufbereitung.
+* **[2_Deskriptive_Analyse.py](./pages/2_Deskriptive_Analyse.py):** Übersicht über grundlegende Prozesskennzahlen wie Fallanzahl, Varianten und Aktivitätsstatistiken.
+* **[3_Zeitliche_Ausreißer.py](./pages/3_Zeitliche_Ausreißer.py):** Untersuchung von Durchlaufzeiten, Engpässen und zeitlichen Mustern im Prozessverlauf.
+* **[4_Trace_Ausreißer.py](./pages/4_Trace_Ausreißer.py):** Identifikation und interaktive Validierung von anomalen Prozesspfaden (Varianten-Ebene).
+* **[5_Resourcen_Ausreißer.py](./pages/5_Resourcen_Ausreißer.py):** Analyse von untypischem Ressourcenverhalten und unüblichen Akteur-Aktivitäts-Kombinationen.
+* **[6_Bericht.py](./pages/6_Bericht.py):** Zusammenfassung der Bereinigungsergebnisse und Export des optimierten Event Logs.
+
+## 🛠 Tech-Stack
+
+* **Backend:** Python
+* **Frontend:** [Streamlit](https://streamlit.io/) (Web-Framework)
+* **Datenverarbeitung:** Pandas, PM4Py (Process Mining for Python)
