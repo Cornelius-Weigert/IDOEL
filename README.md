@@ -37,13 +37,6 @@ Starte die Streamlit-App mit folgendem Befehl:
     ```bash
     streamlit run Dashboard.py
 
-
-## 🛠 Technologie-Stack
-
-* **Backend:** Python
-* **Frontend:** [Streamlit](https://streamlit.io/) (Web-Framework)
-* **Datenverarbeitung:** Pandas, PM4Py (Process Mining for Python)
-
 ## 🧬 Workflow in IDOEL
 
 1. **Input:** Hochladen des Event Logs.
@@ -62,3 +55,9 @@ Das Framework ist modular aufgebaut. Die einzelnen Schritte können über die Si
 * **[4_Trace_Ausreißer.py](./pages/4_Trace_Ausreißer.py):** Identifikation und interaktive Validierung von anomalen Prozesspfaden (Varianten-Ebene).
 * **[5_Resource_Ausreißer.py](./pages/5_Resource_Ausreißer.py):** Analyse von untypischem Ressourcenverhalten und unüblichen Akteur-Aktivitäts-Kombinationen.
 * **[6_Bericht.py](./pages/6_Bericht.py):** Zusammenfassung der Bereinigungsergebnisse und Export des optimierten Event Logs.
+
+## 🛠 Tech-Stack
+
+* **Backend:** Python
+* **Frontend:** [Streamlit](https://streamlit.io/) (Web-Framework)
+* **Datenverarbeitung:** Pandas, PM4Py (Process Mining for Python)
