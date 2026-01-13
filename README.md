@@ -53,9 +53,12 @@ Starte die Streamlit-App mit folgendem Befehl:
 
 
 ## 📑 Inhalt der Pages
-1. 1_Eventlog_Upload.py: 
-2. 2_Deskriptive_Analyse.py: 
-3. 3_Zeitliche_Analyse.py:
-4. 4_Trace_Ausreißer.py:
-5. 5_Resource_Ausreißer.py:
-6. 6_Bericht.py: 
+
+Das Framework ist modular aufgebaut. Die einzelnen Schritte können über die Sidebar angesteuert werden:
+
+* **[1_Eventlog_Upload.py](./pages/1_Eventlog_Upload.py):** Zentraler Einstiegspunkt für den Import von Event Logs (CSV/XES) und die initiale Datenaufbereitung.
+* **[2_Deskriptive_Analyse.py](./pages/2_Deskriptive_Analyse.py):** Übersicht über grundlegende Prozesskennzahlen wie Fallanzahl, Varianten und Aktivitätsstatistiken.
+* **[3_Zeitliche_Analyse.py](./pages/3_Zeitliche_Analyse.py):** Untersuchung von Durchlaufzeiten, Engpässen und zeitlichen Mustern im Prozessverlauf.
+* **[4_Trace_Ausreißer.py](./pages/4_Trace_Ausreißer.py):** Identifikation und interaktive Validierung von anomalen Prozesspfaden (Varianten-Ebene).
+* **[5_Resource_Ausreißer.py](./pages/5_Resource_Ausreißer.py):** Analyse von untypischem Ressourcenverhalten und unüblichen Akteur-Aktivitäts-Kombinationen.
+* **[6_Bericht.py](./pages/6_Bericht.py):** Zusammenfassung der Bereinigungsergebnisse und Export des optimierten Event Logs.
