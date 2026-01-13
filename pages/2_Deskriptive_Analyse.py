@@ -1,10 +1,5 @@
+# Abhängigkeiten importieren
 import streamlit as st
-import tempfile
-import Datenanalyse_Outlier.load_eventLog as load_eventLog
-import Datenanalyse_Outlier.eventlog_to_image as eventlog_to_image
-import pm4py
-import pandas as pd
-from Datenanalyse_Outlier.map_columns import map_column
 from Datenanalyse_Outlier.display_analysis.frequency import show_frequency
 from Datenanalyse_Outlier.display_analysis.duration_process import show_process_duration
 from Datenanalyse_Outlier.display_analysis.resources import show_resources
@@ -12,13 +7,14 @@ from Datenanalyse_Outlier.display_analysis.duration_activity import show_activit
 from Datenanalyse_Outlier.display_analysis.standard_value import show_standard_compare
 from Datenanalyse_Outlier.display_analysis.duration_process import show_process_duration
 
-# --- SESSION STATE INITIALISIEREN ---
+# Session State initialisieren 
 if st.session_state.get("df") is None:
     st.warning("⚠️ Bitte zuerst einen Eventlog auf der \"Upload Eventlog\" Seite hochladen.")
     st.stop()
 
 df = st.session_state.get("df")
 
+# Tabs anzeigen (von links nach rechts)
 tab1, tab2, tab3, tab4,tab5 = st.tabs([
     "Häufigkeit",
     "Prozessdauer",

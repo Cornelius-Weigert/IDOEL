@@ -1,7 +1,7 @@
+# Abhängigkeiten importieren 
 import sys, os
 ROOT = os.path.dirname(os.path.abspath(__file__))  
 sys.path.append(os.path.join(ROOT, ".."))  
-
 import streamlit as st
 import tempfile
 import Datenanalyse_Outlier.load_eventLog as load_eventLog
@@ -10,7 +10,7 @@ import pm4py
 import pandas as pd
 from Datenanalyse_Outlier.map_columns import map_column
 
-# --- SESSION STATE INITIALISIEREN ---
+# Session State initialisieren
 if "uploaded_logs" not in st.session_state or st.session_state["uploaded_logs"] is None:
     st.session_state["uploaded_logs"] = []
 
@@ -27,7 +27,6 @@ st.session_state.setdefault("outlier_total", 0)
 st.session_state.setdefault("trace_outliers_accepted", [])
 st.session_state.setdefault("outliers_accepted", [])
 st.session_state.setdefault("outliers", None)
-# session states for outlier filter settings
 st.session_state.setdefault('lower_res', 0.05)
 st.session_state.setdefault('upper_res', 0.95)
 st.session_state.setdefault('factor_res', 1.5)
@@ -39,8 +38,13 @@ st.session_state.setdefault('upper_case', 0.95)
 st.session_state.setdefault('factor_case', 1.5)
 
 
-# --- Upload Funktion ---
+# Upload Funktion 
 def upload_eventlog():
+    """
+    Ermöglicht das Hochladen eines Eventlogs (CSV oder XES),
+    speichert die Datei temporär auf dem System und
+    aktualisiert die relevanten Session-State-Variablen.
+    """
     uploaded_file = st.file_uploader(
         "Datei auswählen",
         type=["xes", "csv"],
@@ -72,25 +76,25 @@ def upload_eventlog():
 
         st.success(f"Datei erfolgreich hochgeladen: {uploaded_file.name} ({file_type})")
 
-# --- UI ---
+# User Interface
 st.title("Eventlog hochladen")
 st.write("Bitte Eventlog hochladen (XES oder CSV):")
 
 # Upload immer anzeigen
 upload_eventlog()
 
-# --- Wenn Datei existiert: anzeigen ---
+# Wenn Datei existiert, dann anzeigen
 file_path = st.session_state.get("file_path")
 file_type = st.session_state.get("file_type")
 file_name = st.session_state.get("file_name")
 
-# --- Sicherstellen, dass df existiert ---
+# Sicherstellen, dass df existiert
 if file_path is None or file_type is None:
     st.warning("⚠️ Kein Eventlog geladen.")
     st.stop()
 
 if st.session_state.get("df") is None:
-    # --- Datei einlesen ---
+    # Datei einlesen 
     try:
         if file_type == "CSV":
             df = pd.read_csv(file_path)
@@ -100,8 +104,6 @@ if st.session_state.get("df") is None:
             st.session_state["df"] = df
             st.session_state["log"] = log
         
-
-
         elif file_type == "XES":
             log = pm4py.read_xes(file_path)
             df = pm4py.convert_to_dataframe(log)
@@ -115,7 +117,6 @@ if st.session_state.get("df") is None:
         with open("Dashboard_log/d_log.txt", "w+") as dashboard_log:
             dashboard_log.writelines([str(st.session_state["outlier_total"]) + "\n", str(st.session_state["uploaded_logs"])])
             
-
     except Exception as e:
         st.error(f"❌ Fehler beim Einlesen der Datei: {e}")
         st.stop()
@@ -124,13 +125,7 @@ else:
     df = st.session_state["df"]
     log = st.session_state["log"]
 
-# Analysen durchführen und in Session state speichern 
-#from Datenanalyse_Outlier.show_analysis import show_all_analysis
-#st.session_state["outliers"] = show_all_analysis(log)
-
-
-
-# --- STATISTIKEN ---
+# Statistiken anzeigen
 st.subheader("📊 Log-Statistiken")
 
 num_cases = df["case_id"].nunique()
@@ -157,7 +152,7 @@ col4.metric("Period", display)
 
 st.markdown("---")
 
-# --- DIRECTLY-FOLLOWS GRAPH ---
+# DFG anzeigen
 st.subheader("🔁 Directly-Follows Graph (DFG)")
 
 percentage_slider = st.slider(
@@ -169,6 +164,6 @@ st.image(eventlog_to_image.get_dfg_image(log, percentage=percentage_slider))
 
 st.markdown("---")
 
-# --- HÄUFIGSTE AKTIVITÄTEN ---
+# Häufigsten Aktivitäten anzeigen
 st.subheader("🔥 Häufigste Aktivitäten")
 st.bar_chart(df["activity"].value_counts())

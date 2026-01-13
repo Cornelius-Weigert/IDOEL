@@ -1,7 +1,7 @@
 import streamlit as st
 
-
-with open("Dashboard_log/d_log.txt", "r+") as dashboard_log: # first line safes accepted outliers, second line safes uploaded logs
+# öffnet eine persistente Log-Datei für das Dashboard. Die Datei dient dazu, Sitzungsübergreifend Informationen zu speichern, da Streamlit bei jedem Reloadden session_state neu initialisiert
+with open("Dashboard_log/d_log.txt", "r+") as dashboard_log: 
     lines = dashboard_log.readlines()
     if not lines:
         st.session_state["uploaded_logs"] = []
@@ -20,12 +20,11 @@ with open("Dashboard_log/d_log.txt", "r+") as dashboard_log: # first line safes 
 
 st.set_page_config(page_title="Dashboard", layout="wide")
 
-
-# --- Kopfzeile ---
+# Kopfzeile 
 st.title("🏠 Dashboard")
 st.write("Übersicht zur interaktiven Detektion von Ausreißern in Eventlogs")
 
-# --- Spalten ---
+# Spalten (Hochgeladene Log, Ausreißer gefunden, Letzter Upload)
 col1, col2, col3 = st.columns(3)
 
 with col1:
@@ -43,7 +42,7 @@ with col3:
 
 st.markdown("---")
 
-# --- Neueste Aktivitäten ---
+# Neueste Aktivitäten 
 st.subheader("📝 Neueste Aktivitäten")
 
 if st.session_state["uploaded_logs"]:

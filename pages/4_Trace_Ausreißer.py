@@ -1,10 +1,9 @@
-import streamlit as st
-from Datenanalyse_Outlier import eventlog_to_image as eventlog_to_image
-from Datenanalyse_Outlier import load_eventLog as load_eventLog 
+# Abhängigkeiten importieren 
+import streamlit as st 
 from Datenanalyse_Outlier.display_analysis.outlier_trace import show_trace_outliers
 
 
-# --- SESSION STATE INITIALISIEREN ---
+# Session State initialisieren
 if st.session_state.get("df") is None:
     st.warning("⚠️ Bitte zuerst einen Eventlog auf der \"Upload Eventlog\" Seite hochladen.")
     st.stop()

@@ -1,23 +1,19 @@
+# Abhängigkeiten importieren
 import streamlit as st
-import pandas as pd
-import pm4py
-from Datenanalyse_Outlier import eventlog_to_image as eventlog_to_image
-from Datenanalyse_Outlier import load_eventLog as load_eventLog
-from streamlit_elements import elements, mui, nivo 
-from Datenanalyse_Outlier.display_analysis. outlier_temporal import show_temporal_outliers
-from Datenanalyse_Outlier.map_columns import map_column
+from Datenanalyse_Outlier.display_analysis.outlier_temporal import show_temporal_outliers
 
-# --- SESSION STATE INITIALISIEREN ---
+# Sicherheitscheck falls noch kein Eventlog geladen wurde
 if st.session_state.get("df") is None:
     st.warning("⚠️ Bitte zuerst einen Eventlog auf der \"Upload Eventlog\" Seite hochladen.")
     st.stop()
 
+# Laden des Eventlogs aus dem Session State
 df = st.session_state.get("df")
-log = st.session_state.get("log")
 
 # Sonstige Session States für Ausreißer
 outlier_total = st.session_state.get("outlier_total")
 outlier_checked = st.session_state.get("outlier_checked")  
 outliers_accepted = st.session_state.get("outliers_accepted")
 
+# Anzeige der zeitlichen Ausreißer
 show_temporal_outliers(df)
