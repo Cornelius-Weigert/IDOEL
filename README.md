@@ -50,3 +50,12 @@ Starte die Streamlit-App mit folgendem Befehl:
 2. **Highlighting:** Markierung von Traces/Events mit hoher Ausreißer-Wahrscheinlichkeit.
 3. **Human Decision:** Der Experte kann Ausreißer bestätigen und einen Kommentar ergänzen.
 4. **Output:** Download der durch den Experten validierten Ausreißer.
+
+
+## 📑 Inhalt der Pages
+1. 1_Eventlog_Upload.py: 
+2. 2_Deskriptive_Analyse.py: 
+3. 3_Zeitliche_Analyse.py:
+4. 4_Trace_Ausreißer.py:
+5. 5_Resource_Ausreißer.py:
+6. 6_Bericht.py: 
