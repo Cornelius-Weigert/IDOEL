@@ -2,7 +2,22 @@ import pandas as pd
 import streamlit as st
 
 def map_column(df):
-    # Kleinbuchstaben
+    """
+    Vereinheitlicht die Spaltennamen eines Eventlogs.
+    Die Funktion erkennt unterschiedliche Bezeichnungen für case-id, activity, timestamp und resource
+    und mappt sie auf ein einheitliches Schema. Zusätzlich werden notwendige Pflichtspalten geprüft 
+    und Zeitstempel in ein Datumsformat konvertiert.
+
+    Parameter:
+        df: pandas.Dataframe
+            Eventlog als Dataframe mit beliebigen Spaltenbezeichnungen  
+
+    Rückgabewert:
+        pandas.Dataframe
+        Eventlog mit normalisierten Spaltennamen und gültigen Zeitstempeln.
+    """
+    
+    # Spaltennamen in Kleinbuchstaben umwandeln
     df.columns = [c.lower() if isinstance(c,str) else c for c in df.columns]
 
     # Mapping für notwendige Spalten
@@ -49,7 +64,7 @@ def map_column(df):
         st.error("❌ Konnte keine gültigen Zeitstempel erkennen.")
         st.stop()
     
-    # fals resource Spalte fehlt, wird leere Spalte hinzugefügt, Ausreißeranalyse funktioniert
+    # falls resource Spalte fehlt, wird leere Spalte hinzugefügt, Ausreißeranalyse funktioniert
     if "resource" not in df.columns:
         df["resource"] = ""
 
