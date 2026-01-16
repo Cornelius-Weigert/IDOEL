@@ -1,3 +1,5 @@
+# kurze Beschreibung der Kategorien
+
 OUTLIER_DESCRIPTIONS = {
     "Fehlende_Ressource": {
         "description": "Dieses Ereignis hat keine zugeordnete Ressource. "
