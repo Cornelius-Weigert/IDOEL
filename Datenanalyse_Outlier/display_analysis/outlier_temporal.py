@@ -3,10 +3,20 @@ from ..statistic_analysis.outlier_temporal import temporal_outliers
 import pandas as pd
 from ..statistic_analysis.second_to_time import second_to_time
 from .outlier_acception import accept_outliers
-from ..statistic_analysis import duration_activity
 from .description import OUTLIER_DESCRIPTIONS
 
 def deduplicate_columns(log_df):
+    """
+    Prüft die Spaltennamen auf Duplikate und hängt bei mehrfach vorkommenden Spalten 
+    einen Index an, um eindeutige Spaltennamen zu erzeugen.
+
+    Parameter:
+        log_df (pandas.Dataframe): Eventlog Dataframe mit möglichen doppelten Spaltennamen.
+
+    Rückgabewert:
+        Dataframe mit eindeutigen Spaltennamen.
+    """
+
     new_cols = []
     seen = {}
     for col in log_df.columns:
@@ -22,16 +32,17 @@ def deduplicate_columns(log_df):
 
 def show_temporal_outliers(log_df: pd.DataFrame, case_col="case_id", timestamp_col="timestamp", activity_col="activity"):
     """
-    Show temporal outlier analysis based on activity duration in the Streamlit interface.
-    Args:
-        log_df (pd.DataFrame): The event log as a DataFrame.
-        case_col (str): The name of the case identifier column.
-        timestamp_col (str): The name of the timestamp column.
-        activity_col (str): The name of the activity column.
+    Zeigt die Analyse zeitlicher Ausreißer auf Basis der Aktivitätsdauer im Streamlit-Interface an.
+    
+    Parameter:
+        log_df (pd.DataFrame): Eventlog als Dataframe. Erwartet mindestens die Spalten 'case_col', 'activity_col' und 'timestamp_col'.
+        case_col (str): Spaltenname für die Fall-ID.
+        timestamp_col (str): Spaltenname für den Zeitstempel.
+        activity_col (str): Spaltennamen für die Aktivität.
     Returns:
-        None
+        Die Funktion erzeugt UI-Elemente, verändert Session-State.
     """
-    #filter 
+    # Filteroptionen für Aktivitätsdauer 
     st.subheader("🌟 Filter - Activity Duration")
     show_act_slider = st.checkbox("Perzentilebasierte Grenzwerte anzeigen ", value = False,key="actvity_slider")
     lower_act =st.session_state['lower_act']
@@ -48,7 +59,7 @@ def show_temporal_outliers(log_df: pd.DataFrame, case_col="case_id", timestamp_c
 
     outliers,log_with_duration = temporal_outliers(log_df,case_col=case_col)
 
-    # duration auch anzeigen
+    # Anzeige der Ausreißer pro Kategorie
     for category, indices in outliers.items():
         st.write(f"### Kategorie: {category}")
         if category in OUTLIER_DESCRIPTIONS:
@@ -60,7 +71,7 @@ def show_temporal_outliers(log_df: pd.DataFrame, case_col="case_id", timestamp_c
             if "duration" not in outlier_df.columns:
                 outlier_df["duration"] = pd.NA
 
-            # duration nach timestamp_col sortieren
+            # Duration-Spalte nach timestamp_col platzieren
             cols = list(outlier_df.columns)
             if timestamp_col in cols:
                 cols.remove("duration") if "duration" in cols else None
@@ -70,12 +81,12 @@ def show_temporal_outliers(log_df: pd.DataFrame, case_col="case_id", timestamp_c
                     new_cols.append(c)
                     if c == timestamp_col:
                         new_cols.append("duration")
-                # append any remaining cols not in new_cols
+                
                 for c in cols:
                     if c not in new_cols:
                         new_cols.append(c)
                 
-                # remove duplicates while preserving order
+                # Duplikate entfernen
                 new_cols = [c for i, c in enumerate(new_cols) if c not in new_cols[:i]]
                 if "duration" not in new_cols:
                     new_cols.append("duration")
@@ -90,7 +101,7 @@ def show_temporal_outliers(log_df: pd.DataFrame, case_col="case_id", timestamp_c
                     cols.insert(0, "duration")
                     outlier_df = outlier_df.reindex(columns=cols)
 
-            # ojektiv -> numeric  ->lesbare Zeit
+            # Duration in Sekunden konvertieren und lesbar machen 
             if pd.api.types.is_timedelta64_dtype(outlier_df["duration"]):
                 outlier_df["duration"] = outlier_df["duration"].dt.total_seconds()
             else:
@@ -98,8 +109,7 @@ def show_temporal_outliers(log_df: pd.DataFrame, case_col="case_id", timestamp_c
             outlier_df["duration"] = outlier_df["duration"].apply(second_to_time)
 
             outlier_df["standard_activity_duration"]= outlier_df["standard_activity_duration"].apply(second_to_time)
-            
-            # display in dataframe with selectable rows
+            # Anzeige als Dataframe
             outliers = st.dataframe(
                 outlier_df, 
                 width="stretch",

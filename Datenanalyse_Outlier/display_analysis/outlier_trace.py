@@ -2,23 +2,44 @@ import graphviz
 import streamlit as st
 from ..statistic_analysis.outlier_trace import outlier_trace
 from ..statistic_analysis.duration_process import duration_pro_case
-from .outlier_acception import accept_outliers
 from ..statistic_analysis.second_to_time import second_to_time
 from ..statistic_analysis.duration_activity import duration_pro_activity
 from ..statistic_analysis import duration_process
 from .description import OUTLIER_DESCRIPTIONS
 
 def create_trace_graph(log_df):
+    """
+    Erstellt eine einfache Graphviz Darstellung eines Traces basierend 
+    auf der Reihenfolge der AKtivitäten.
+
+    Parameter:
+        log_df (pandas.Dataframe): Dataframe eines einzelnen Traces (Case), 
+        sortiert nach Zeitstempel und mit einer Spalte 'activity'.
+
+    Rückgabewert:
+        Gerichteter Graph zur Visualisierung der Traces 
+    """
+
     graph = graphviz.Digraph()
     graph.attr("node", shape='box')
     for i in range(1, len(log_df["activity"])):
         graph.edge(log_df["activity"].iloc[i-1], log_df["activity"].iloc[i])
     return graph
 
-# fragment for single trace so that only this part reruns on interaction -> improves performance
 @st.fragment
 def _render_single_trace(category, case_id, case_df):
-    """Fragment for a single trace - only this trace reruns on checkbox click."""
+    """
+    Rendert einen einzelnen Trace (Case) innerhalb eines Expanders.
+
+    Parameter: 
+        category (str): Name der Ausreißerkategorie.
+        case_id (str|int): Eindeutige Case-ID des Traces.
+        case_df (pandas.Dataframe): Alle Events des Traces inklusive berechneter Dauerinformationen.
+
+    Rückgabewert:
+    Erzeugt UI-Elemente und verändert den Session-State.    
+    """
+
     case_duration=second_to_time(case_df["case_duration"].iloc[0])
     with st.expander(f"Trace von Case ID: {case_id} | Case_Dauer: {case_duration}"):
         st.dataframe(case_df[
@@ -32,7 +53,6 @@ def _render_single_trace(category, case_id, case_df):
         comment = st.text_area("(Optional) Kommentar zu diesem Ausreißer eingeben",key=f"comment_trace_outliers_{case_id}_{category}")
         accept_comment = st.button("Kommentar bestätigen & Ausreißer akzeptieren", key=f"confirm_accept_trace_{case_id}_{category}")
         if accept_comment:
-            # ToDo add outlier logic
             case_df["Kommentar"] = comment
             st.session_state["trace_outliers_accepted"].append([category,case_df])
             st.success(f"✅ Ausreißer für Case ID '{case_id}' in der Kategorie '{category}' wurde akzeptiert.")
@@ -41,17 +61,19 @@ def _render_single_trace(category, case_id, case_df):
 
 def show_trace_outliers(log_df):
     """
-    Show trace outlier analysis in the Streamlit interface.
-    Args:
-        log_df (pd.DataFrame): The event log as a DataFrame.
+    Zeigt die Trace-Ausreißeranalyse in Streamlit an.
+
+    Parameter:
+        log_df (pandas.DataFrame): Eventlog als Dataframe.
     Returns:    
-        None
+        Erzeugt UI-Elemente, nutzt Session-Stateund rendert interaktive Fragmente.
     """
-    #filter
+
+    # Filtereinstellungen für Case-Dauer
     st.subheader("🌟 Filter - Case Duration")
     case_duration = duration_process.duration_pro_case(log_df)
     show_case_slider = st.checkbox("Perzentilebasierte Grenzwerte anzeigen ", value = False,key="case_slider")
-    #initialize
+    # Initialisierung der Session-State Werte
     if 'upper_case' not in st.session_state: st.session_state['upper_case'] = 0.95
     if 'lower_case' not in st.session_state: st.session_state['lower_case'] = 0.05
     if 'upper_case_diverse' not in st.session_state: st.session_state['upper_case_diverse'] = 0.95
@@ -74,14 +96,12 @@ def show_trace_outliers(log_df):
             st.session_state['upper_case_diverse'] = upper_case_diverse
             st.session_state['factor_case'] = factor_case
 
-
+    # Ausreißeranalyse durchführen 
     outliers = outlier_trace(log_df)
     case_duration_df = duration_pro_case(log_df)
-    # activity duration
     activity_df = duration_pro_activity(log_df)
 
     for category, indices in outliers.items():
-        # if category in OUTLIER_DESCRIPTIONS:
         st.caption(OUTLIER_DESCRIPTIONS[category]["description"])
 
         with st.expander(f"### Kategorie: {category} | Anzahl Cases: {len(set(log_df.loc[indices, 'case_id']))}"):

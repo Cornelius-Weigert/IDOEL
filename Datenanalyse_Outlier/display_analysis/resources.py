@@ -2,12 +2,13 @@ import streamlit as st
 
 def show_resources(log_df, resource_col="resource"):
     """
-    Show resource analysis in the Streamlit interface.
-    Args:
-        log_df (pd.DataFrame): The event log as a DataFrame.
-        resource_col (str): The name of the resource column in the DataFrame.
-    Returns:
-        None
+    Zeigt eine Analyse der Ressourcennutzung im Streamlit-Interface an.
+
+    Parameter:
+        log_df (pandas.DataFrame): Eventlog als Dataframe.
+        resource_col (str): Name der Rressourcenspalte im Dataframe.
+    Rückgabewert:
+        Erzeugt UI-Elemente zur Analyse der Ressourcennutzung.
     """
     st.subheader("👥 Ressourcen Analyse")
 
@@ -21,7 +22,7 @@ def show_resources(log_df, resource_col="resource"):
     sub = log_df[log_df["activity"] == selected]
     counts = sub["resource"].value_counts()
 
-    st.bar_chart(counts, sort=False) # sort=False to keep the original pre sorted order -> otherwise it sorts alphabetically
+    st.bar_chart(counts, sort=False) 
 
     log_with_counts = log_df.groupby("resource").agg(activity_count=("activity", "count")).reset_index()
 

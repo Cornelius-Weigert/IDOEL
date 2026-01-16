@@ -1,22 +1,33 @@
 import streamlit as st
 from ..statistic_analysis.outlier_resource import outlier_resources
-from .outlier_acception import accept_outliers
 from.description import OUTLIER_DESCRIPTIONS
 import pandas as pd
 
 if "resource_outliers_accepted" not in st.session_state or not isinstance(
-    st.session_state["resource_outliers_accepted"], dict
-):
+    st.session_state["resource_outliers_accepted"], dict):
     st.session_state["resource_outliers_accepted"] = {}
 
 if "outlier_accepted" not in st.session_state:
     st.session_state["outlier_accepted"] = 0
 if "refresh_bericht" not in st.session_state:
      st.session_state["refresh_bericht"]=[]        
-# fragment for single resource so that only this part reruns on interaction -> improves performance
+
 @st.fragment
 def render_single_resource(category, resource, resource_df,label, value):
-    """Fragment for a single resource - only this resource reruns on checkbox click."""
+    """
+    Rendert einen einzelnen Ressourcen-Ausreißer als Streamlit-Fragment.
+
+    Parameter:
+        category (str): Kategorie des Ressourcen-Ausreißers.
+        resource (str): Name der Ressource.  
+        resource_df (pandas.Dataframe): Alle Events der Ressource, die als Ausreißer identifiziert wurden. 
+        label (str): Beschreibung des angezeigten Kernwerts.
+        value (int): Kennwert der Ressource.
+
+    Rückgabewert:
+        Die Funktion erzeugt UI-Elemente und verändert den Session-State. 
+    """
+
     with st.expander(f"👤 Ressource:{resource} | {label} {value}"):
         st.dataframe(resource_df[
                 ["case_id","activity","resource"]]
@@ -29,12 +40,10 @@ def render_single_resource(category, resource, resource_df,label, value):
         comment = st.text_area("(Optional) Kommentar zu diesem Ausreißer eingeben",key=f"comment_resource_{category}_{resource}")
         accept_comment = st.button("Kommentar bestätigen & Ausreißer akzeptieren", key=f"confirm_accept_resource_{category}_{resource}")
         if accept_comment:
-            # ToDo add outlier logic
+            
             df_copy=resource_df.copy()
             df_copy["Kommentar"] = comment
-            # st.session_state["resource_outliers_accepted"].append([category,df_copy])
         
-
             if category in st.session_state["resource_outliers_accepted"]:
                 st.session_state["resource_outliers_accepted"][category] = pd.concat(
                     [st.session_state["resource_outliers_accepted"][category], df_copy],
@@ -50,13 +59,16 @@ def render_single_resource(category, resource, resource_df,label, value):
 
 def show_resource_outliers(log_df):
     """
-    Show resource outlier analysis in the Streamlit interface.
-    Args: 
-        log_df (pd.DataFrame): The event log as a DataFrame.
-    Returns:
-        None
+    Zeigt eine Ressourcen-basierte Ausreißeranalyse im Streamlit-Interface an.
+
+    Parameter: 
+        log_df (pd.DataFrame): Eventlog als Dataframe. Erwartet mindestens die Spalten
+        'case_id', 'activity', 'resource' und 'timestamp'.
+
+    Rückgabewert:
+        Die Funktion erzeugt UI-Elemente und verändert den Session-State.
     """
-    #filter
+    
     st.subheader("🌟 Filter - Resource_Activity Value")
     show_res_slider = st.checkbox("Perzentilebasierte Grenzwerte anzeigen ", value = False,key="resource_slider")
     lower_res = st.session_state.get('lower_res') #= 0.05
@@ -103,31 +115,6 @@ def show_resource_outliers(log_df):
             outlier_df= temp_df.merge(resource_activity_count,on="resource", how="left")
             temp_col="resource_activity_count"
             label="Anzahl ausgeführter Aktivitäten:"
-
-        # for resource, res_df in outlier_df.groupby("resource"):
-        #     value = res_df[temp_col].iloc[0]
-        #     key_df=f"df_{category}_{resource}"
-        #     key_comment=f"comment_{category}_{resource}"
-        #     key_button=f"accept_{category}_{resource}"
-
-        #     res_df_display=res_df[["case_id","activity","timestamp"]]
-        #     with st.expander(
-        #         f"👤 Ressource: {resource} ({label} {value})",
-        #         expanded=False
-        #     ):
-
-        #         selectable_outliers = st.dataframe(
-        #         res_df_display,
-        #         key=key_df,
-        #         width="stretch",
-        #         on_select="rerun",
-        #         selection_mode="multi-row",
-        #         hide_index=True)
-        #         comment = st.text_area("(optional) Kommentar zu ausgewählten Ausreißern eingeben",key=key_comment)
-        #         ausreißer_akzeptiert_button = st.button("Ausgewählte Ausreißer akzeptieren", key=key_button)
-        #         if ausreißer_akzeptiert_button:
-        #             accept_outliers(selectable_outliers.selection.rows,category,outlier_df,comment,"resource")
-        #             selectable_outliers.selection.clear()
 
         for resource, res_df in outlier_df.groupby("resource"):
             value = res_df[temp_col].iloc[0]
