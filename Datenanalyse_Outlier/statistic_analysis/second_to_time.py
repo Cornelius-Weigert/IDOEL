@@ -1,7 +1,16 @@
-import pandas as pd
 import math
 
 def second_to_time(seconds: float) -> str:
+    """
+    Konvertiert eine Zeitangabe in Sekunden in ein lesbares Zeitformat.
+
+    Parameter:
+        seconds (float): Zeit in Sekunden.
+
+    Rückgabewert:
+        str: Lesbare Zeitangabe 
+    """
+    
     if seconds is None or (isinstance(seconds, float)and math.isnan(seconds)):
         return "-"
     else:

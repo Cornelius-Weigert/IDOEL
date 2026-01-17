@@ -2,14 +2,16 @@ import pandas as pd
 from .second_to_time import second_to_time
 def compare_with_standardwert(log_df, standard=None, event_col="activity", value_col="value", id_col="case_id"):
     """
-    Compare values in the log with standard values.
-    Args:
-        log (pd.DataFrame): DataFrame containing the event log.
-        standard (dict or numeric): Standard values per event or a single standard value.
-        event_col (str): Column name for events.
-        value_col (str): Column name for values to compare.
-    Returns:
-        pd.DataFrame: DataFrame with original values, standard values, and deviations.
+    Vergleicht Werte in einem Eventlog mit Standardwerten.
+
+    Parameter:
+        log (pd.DataFrame): DataFrame mit dem Eventlog.
+        standard (dict or numeric): Standardwerte pro Aktivität oder einzelner Standardwert.
+        event_col (str): Spaltenname für die Aktivität
+        value_col (str): Spaltenname für den zu vergleichenden Wert.
+
+    Rückgabewert:
+        pd.DataFrame: DataFrame mit: Originalwerten, Standardwerten, Abweichungen in lesbarem Format.
     """
 
     if value_col not in log_df.columns:
