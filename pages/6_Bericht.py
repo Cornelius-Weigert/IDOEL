@@ -17,10 +17,11 @@ def grouped_outliers(outliers,has_type=True):
         outliers : Liste von Tupeln
         has_type : Gibt an, ob der Typdes Ausreißers (temporal/resource) im Tupel enthalten ist
 
-    Returns:
+    Rückgabewert:
         zwei Listen: - zeitliche Ausreißer
                      - Ressourcen Ausreißer
     """
+
     if not outliers:
         return []
     grouped_temporal = {}
@@ -80,7 +81,12 @@ def comment_and_download_section(df, category, outlier_type,resource=None):
         category: Name der Ausreißer-Kategorie
         outlier_type: Typ des Ausreißers (z.B. Trace, Zeitlich, Ressource)
         resource: Optionaler Ressourcenname für eindeutige Zuordnung
+    
+    Rückgabewert:
+    Die Funktion gibt keinen Wert zurück, sondern erzeugt Streamlit-UI-Komponenten
+    und aktualisiert den Session-State.
     """
+    
      resource_str=f"_{resource}"if resource else ""
     # Kommentar Funktion zu jeder Kategorie
      comment = st.text_area(

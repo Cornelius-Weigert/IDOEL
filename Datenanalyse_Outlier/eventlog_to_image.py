@@ -33,9 +33,10 @@ def get_bpmn_image(log, percentage=1):
        log: Eventlog im PM4Py-Format
        prozent: Abdeckung der Varianten, die berücksichtigt werden sollen 
 
-    Rückgabe: 
-    SVG-Code des generierten BPMN-Diagramm als String.
+    Rückgabewert: 
+       SVG-Code des generierten BPMN-Diagramm als String.
     """ 
+    
     log = pm4py.filtering.filter_variants_by_coverage_percentage(log,1-percentage)
     bpmn = pm4py.discover_bpmn_inductive(log)
     image_path = 'temp_graphs/'+str(datetime.date.today())+'_bpmn.svg'

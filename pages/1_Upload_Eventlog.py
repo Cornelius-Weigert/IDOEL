@@ -44,7 +44,15 @@ def upload_eventlog():
     Ermöglicht das Hochladen eines Eventlogs (CSV oder XES),
     speichert die Datei temporär auf dem System und
     aktualisiert die relevanten Session-State-Variablen.
+
+    Parameter: 
+       Keine.
+    
+    Rückgabewert:
+    Die Funktion gibt keinen Wert zurück. Sie erzeugt Streamlit-UI-Komponenten, speichert
+    Metdaten, und Dateipfade im Session-State.
     """
+    
     uploaded_file = st.file_uploader(
         "Datei auswählen",
         type=["xes", "csv"],

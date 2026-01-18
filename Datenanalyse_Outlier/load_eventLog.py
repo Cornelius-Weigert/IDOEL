@@ -12,7 +12,7 @@ def eventLog_from_csv(path, separator=',', case_id='Case ID', activity_key='Acti
         activity_key (str): Spaltenname der Aktivität
         timestamp_key (str): Spaltenname des Zeitstempels
 
-    Rückgabe: 
+    Rückgabewert: 
        Diese Funktion gibt den Eventlog im PM4Py Format zurück.
     """
     
